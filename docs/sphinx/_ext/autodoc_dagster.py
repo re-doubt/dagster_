@@ -4,7 +4,15 @@ from typing import Any, List, Type, Union, cast
 
 import dagster.check as check
 from dagster import BoolSource, Field, IntSource, StringSource
-from dagster.config.config_type import Array, ConfigScalar, ConfigType, ConfigTypeKind, Enum, Noneable, ScalarUnion
+from dagster.config.config_type import (
+    Array,
+    ConfigScalar,
+    ConfigType,
+    ConfigTypeKind,
+    Enum,
+    Noneable,
+    ScalarUnion,
+)
 from dagster.core.definitions.configurable import ConfigurableDefinition
 from dagster.serdes import ConfigurableClass
 from sphinx.ext.autodoc import ClassDocumenter, DataDocumenter
