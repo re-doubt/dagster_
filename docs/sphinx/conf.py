@@ -98,8 +98,8 @@ extensions = [
     # Directives for automatically documenting CLIS built with the `click` package.
     "sphinx_click.ext",
 
-    # Elementl-authored extension for rendering config schemas in the API docs.
-    "autodoc_configurable",
+    # Elementl-authored extension with custom directives and sphinx processing.
+    "autodoc_dagster",
 
     # Renders a collapsible HTML component. Used by autodoc_configurable.
     "sphinx_toolbox.collapse",
