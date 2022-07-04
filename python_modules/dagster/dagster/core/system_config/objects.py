@@ -407,7 +407,7 @@ class ExecutionConfig(
                 execution_engine_name,
                 "execution_engine_name",  # "in_process"
             ),
-            execution_engine_config=check.opt_dict_param(
+            execution_engine_config=check.opt_mapping_param(
                 execution_engine_config, "execution_engine_config", key_type=str
             ),
         )
@@ -417,5 +417,5 @@ class ExecutionConfig(
         check.opt_mapping_param(config, "config", key_type=str)
         if config:
             execution_engine_name, execution_engine_config = ensure_single_item(config)
-            return ExecutionConfig(execution_engine_name, execution_engine_config.get("config"))
+            return ExecutionConfig(execution_engine_name, check.is_dict(execution_engine_config).get("config"))
         return ExecutionConfig(None, None)

@@ -17,15 +17,13 @@ import threading
 from collections import OrderedDict
 from datetime import timezone
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Callable, ContextManager, Generator, Generic, Iterator
+from typing import TYPE_CHECKING, Any, Callable, ContextManager, Dict, Generator, Generic, Iterator
 from typing import Mapping as TypingMapping
-from typing import Optional, Type, TypeVar, Union, cast, overload
-from warnings import warn
-
-import yaml
+from typing import Optional, Sequence, Tuple, Type, TypeVar, Union, cast, overload
 
 import dagster._check as check
 import dagster.seven as seven
+from dagster.core.definitions.sensor_definition import SensorDefinition
 from dagster.core.errors import DagsterExecutionInterruptedError, DagsterInvariantViolationError
 from dagster.seven import IS_WINDOWS
 from dagster.seven.abc import Mapping
@@ -42,6 +40,7 @@ if TYPE_CHECKING:
     from dagster.core.events import DagsterEvent
 
 T = TypeVar("T")
+U = TypeVar("U")
 
 EPOCH = datetime.datetime.utcfromtimestamp(0)
 
@@ -49,20 +48,6 @@ PICKLE_PROTOCOL = 4
 
 
 DEFAULT_WORKSPACE_YAML_FILENAME = "workspace.yaml"
-
-
-# Back-compat after make_email_on_pipeline_failure_sensor and make_email_on_run_failure_sensor
-# were moved to avoid circular-dependency issues
-def make_email_on_pipeline_failure_sensor(*args, **kwargs):
-    from .alert import make_email_on_pipeline_failure_sensor  # pylint: disable=redefined-outer-name
-
-    return make_email_on_pipeline_failure_sensor(*args, **kwargs)
-
-
-def make_email_on_run_failure_sensor(*args, **kwargs):
-    from .alert import make_email_on_run_failure_sensor  # pylint: disable=redefined-outer-name
-
-    return make_email_on_run_failure_sensor(*args, **kwargs)
 
 
 def file_relative_path(dunderfile: str, relative_path: str) -> str:
@@ -111,7 +96,7 @@ def script_relative_path(file_path: str) -> str:
 
 
 # Adapted from https://github.com/okunishinishi/python-stringcase/blob/master/stringcase.py
-def camelcase(string):
+def camelcase(string: str) -> str:
     check.str_param(string, "string")
 
     string = re.sub(r"^[\-_\.]", "", str(string))
@@ -122,14 +107,14 @@ def camelcase(string):
     )
 
 
-def ensure_single_item(ddict):
+def ensure_single_item(ddict: Mapping[T, U]) -> Tuple[T, U]:
     check.dict_param(ddict, "ddict")
     check.param_invariant(len(ddict) == 1, "ddict", "Expected dict with single item")
     return list(ddict.items())[0]
 
 
 @contextlib.contextmanager
-def pushd(path):
+def pushd(path: str) -> Iterator[str]:
     old_cwd = os.getcwd()
     os.chdir(path)
     try:
@@ -138,7 +123,7 @@ def pushd(path):
         os.chdir(old_cwd)
 
 
-def safe_isfile(path):
+def safe_isfile(path: str) -> bool:
     """ "Backport of Python 3.8 os.path.isfile behavior.
 
     This is intended to backport https://docs.python.org/dev/whatsnew/3.8.html#os-path. I'm not
@@ -153,13 +138,13 @@ def safe_isfile(path):
         return False
 
 
-def mkdir_p(path):
+def mkdir_p(path: str) -> str:
     try:
         os.makedirs(path)
         return path
     except OSError as exc:  # Python >2.5
         if exc.errno == errno.EEXIST and os.path.isdir(path):
-            pass
+            return path
         else:
             raise
 
@@ -492,25 +477,25 @@ class EventGenerationManager(Generic[GeneratedContext]):
             yield from self.generator
 
 
-def utc_datetime_from_timestamp(timestamp):
+def utc_datetime_from_timestamp(timestamp: float) -> datetime.datetime:
     tz = timezone.utc
     return datetime.datetime.fromtimestamp(timestamp, tz=tz)
 
 
-def utc_datetime_from_naive(dt):
+def utc_datetime_from_naive(dt: datetime.datetime) -> datetime.datetime:
     tz = timezone.utc
     return dt.replace(tzinfo=tz)
 
 
-def is_enum_value(value):
+def is_enum_value(value: object) -> bool:
     return False if value is None else issubclass(value.__class__, Enum)
 
 
-def git_repository_root():
+def git_repository_root() -> str:
     return subprocess.check_output(["git", "rev-parse", "--show-toplevel"]).decode("utf-8").strip()
 
 
-def segfault():
+def segfault() -> None:
     """Reliable cross-Python version segfault.
 
     https://bugs.python.org/issue1215#msg143236
@@ -520,7 +505,7 @@ def segfault():
     ctypes.string_at(0)
 
 
-def find_free_port():
+def find_free_port() -> int:
     with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
         s.bind(("", 0))
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -528,7 +513,7 @@ def find_free_port():
 
 
 @contextlib.contextmanager
-def alter_sys_path(to_add, to_remove):
+def alter_sys_path(to_add: Sequence[str], to_remove: Sequence[str]) -> Generator[None, None, None]:
     to_restore = [path for path in sys.path]
 
     # remove paths
