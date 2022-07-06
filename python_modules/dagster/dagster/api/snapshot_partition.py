@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, Sequence
 
 import dagster._check as check
 from dagster.core.errors import DagsterUserCodeProcessError
@@ -104,7 +104,7 @@ def sync_get_external_partition_set_execution_param_data_grpc(
     api_client: "DagsterGrpcClient",
     repository_handle: RepositoryHandle,
     partition_set_name: str,
-    partition_names: List[str],
+    partition_names: Sequence[str],
 ) -> ExternalPartitionSetExecutionParamData:
     from dagster.grpc.client import DagsterGrpcClient
 
