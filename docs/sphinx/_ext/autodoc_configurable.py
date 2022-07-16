@@ -104,7 +104,7 @@ class ConfigurableDocumenter(DataDocumenter):
     ) -> bool:
         return isinstance(member, ConfigurableDefinition) or isinstance(member, ConfigurableClass)
 
-    def add_content(self, more_content, no_docstring: bool = False) -> None:
+    def add_content(self, more_content) -> None:
         source_name = self.get_sourcename()
         self.add_line("", source_name)
         # explicit visual linebreak
@@ -120,7 +120,7 @@ class ConfigurableDocumenter(DataDocumenter):
 
         self.add_line("", source_name)
         # do this call at the bottom so that config schema is first thing in documentation
-        super().add_content(more_content, no_docstring)
+        super().add_content(more_content)
 
 
 def setup(app):
