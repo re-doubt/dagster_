@@ -1,13 +1,6 @@
 from typing import Any, Dict, FrozenSet, Mapping, Optional, cast
 
-from dagster.core.definitions import (
-    GraphDefinition,
-    JobDefinition,
-    Node,
-    NodeDefinition,
-    NodeHandle,
-    OpDefinition,
-)
+from dagster.core.definitions import GraphDefinition, JobDefinition, Node, NodeHandle, OpDefinition
 from dagster.core.definitions.events import AssetKey
 from dagster.core.definitions.pipeline_base import InMemoryPipeline
 from dagster.core.errors import DagsterInvalidInvocationError
@@ -29,7 +22,6 @@ from .execute_in_process_result import ExecuteInProcessResult
 
 
 def core_execute_in_process(
-    node: NodeDefinition,
     run_config: Mapping[str, object],
     ephemeral_pipeline: JobDefinition,
     instance: Optional[DagsterInstance],
