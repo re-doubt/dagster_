@@ -10,7 +10,7 @@ import React, { useContext, useRef, useState } from "react";
 import Icons from "../Icons";
 import Link from "../Link";
 import { useVersion } from "../../util/useVersion";
-import Image from "next/image";
+import NextImage from "next/image";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 export const SearchIndexContext = React.createContext(null);
@@ -378,6 +378,45 @@ const Pre = ({ children, ...props }) => {
   );
 };
 
+const Image = ({ children, ...props }) => {
+
+  /* Only version images when all conditions meet:
+   * - use <Image> component in mdx
+   * - on non-master version
+   * - in public/images/ dir
+   */
+  const { version } = useVersion();
+  const { src } = props;
+  if (!src.startsWith("/images/")) {
+    return (
+      <span className="block mx-auto">
+        <NextImage {...(props as any)} />
+      </span>
+    );
+  }
+
+  const resolvedPath =
+    version === "master"
+      ? src
+      : new URL(
+          path.join("versioned_images", version, src.replace("/images/", "")),
+          "https://dagster-docs-versioned-content.s3.us-west-1.amazonaws.com"
+        ).href;
+
+  return (
+    <Zoom wrapElement="span" wrapStyle={{ display: "block" }}>
+      <span className="block mx-auto">
+        <NextImage
+          src={resolvedPath}
+          width={props.width}
+          height={props.height}
+          alt={props.alt}
+        />
+      </span>
+    </Zoom>
+  );
+};
+
 export default {
   a: ({ children, ...props }) => {
     // Skip in-page links and external links
@@ -396,48 +435,12 @@ export default {
       <img {...(props as any)} />
     </span>
   ),
-  Image: ({ children, ...props }) => {
-    /* Only version images when all conditions meet:
-     * - use <Image> component in mdx
-     * - on non-master version
-     * - in public/images/ dir
-     */
-    const { version } = useVersion();
-    const { src } = props;
-    if (!src.startsWith("/images/")) {
-      return (
-        <span className="block mx-auto">
-          <Image {...(props as any)} />
-        </span>
-      );
-    }
-
-    const resolvedPath =
-      version === "master"
-        ? src
-        : new URL(
-            path.join("versioned_images", version, src.replace("/images/", "")),
-            "https://dagster-docs-versioned-content.s3.us-west-1.amazonaws.com"
-          ).href;
-
-    return (
-      <Zoom wrapElement="span" wrapStyle={{ display: "block" }}>
-        <span className="block mx-auto">
-          <Image
-            src={resolvedPath}
-            width={props.width}
-            height={props.height}
-            alt={props.alt}
-          />
-        </span>
-      </Zoom>
-    );
-  },
   pre: Pre,
   PyObject,
   Link,
   Check,
   Cross,
+  Image,
   LinkGrid,
   LinkGridItem,
   Note,
