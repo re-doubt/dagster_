@@ -1,4 +1,4 @@
-import codeTransformer, { SnapshotStats } from "../util/codeTransformer";
+import codeTransformer, { CodeBlockStats } from "../util/codeBlockTransformer";
 import imageTransformer, { ImageStats } from "../util/imageTransformer";
 import preset from "../.remarkrc.js";
 
@@ -15,13 +15,13 @@ import { parse as yaml } from "yaml";
 (async () => {
   const stream = fg.stream(["../content/**/*.mdx"]);
 
-  let stats: SnapshotStats & ImageStats = {
+  let stats: CodeBlockStats & ImageStats = {
     totalSnapshots: 0,
     updatedSnapshots: [],
     totalImages: 0,
     updatedImages: [],
   };
-  const setSnapshotStats = (newStats: SnapshotStats) => {
+  const setCodeBlockStats = (newStats: CodeBlockStats) => {
     const { totalSnapshots, updatedSnapshots } = newStats;
     stats.totalSnapshots += totalSnapshots;
     stats.updatedSnapshots = stats.updatedSnapshots.concat(updatedSnapshots);
@@ -37,7 +37,7 @@ import { parse as yaml } from "yaml";
       .use(frontmatter)
       .use(extract, { yaml: yaml })
       .use(mdx)
-      .use(codeTransformer, { setSnapshotStats })
+      .use(codeTransformer, { setCodeBlockStats })
       .use(imageTransformer, { setImageStats })
       .use(preset)
       .process(file);
@@ -48,12 +48,12 @@ import { parse as yaml } from "yaml";
     });
   }
 
-  console.log(`✅ ${stats.totalSnapshots} snapshots parsed`);
-  if (stats.updatedSnapshots.length) {
-    console.log(`⚡️ ${stats.updatedSnapshots.length} updated:`);
-    console.log(`\t${stats.updatedSnapshots.join("\n\t")}`);
+  console.log(`✅ ${stats.totalCodeBlocks} code blocks parsed`);
+  if (stats.updatedCodeBlocks.length) {
+    console.log(`⚡️ ${stats.updatedCodeBlocks.length} updated:`);
+    console.log(`\t${stats.updatedCodeBlocks.join("\n\t")}`);
   } else {
-    console.log(`✨ No snapshots were updated`);
+    console.log(`✨ No code blocks were updated`);
   }
 
   console.log(`✅ ${stats.totalImages} images parsed`);

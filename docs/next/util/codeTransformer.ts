@@ -12,13 +12,13 @@ const DOCS_SNIPPET = path.join(
   "/examples/docs_snippets/docs_snippets"
 );
 
-export interface SnapshotStats {
-  totalSnapshots: number;
-  updatedSnapshots: string[];
+export interface CodeBlockStats {
+  totalCodeBlocks: number;
+  updatedCodeBlocks: string[];
 }
 
 interface CodeTransformerOptions {
-  setSnapshotStats?: (newStats: SnapshotStats) => void;
+  setCodeBlockStats?: (newStats: CodeBlockStats) => void;
 }
 
 const normalizeOptionValue = (value: string): string | boolean => {
@@ -27,7 +27,7 @@ const normalizeOptionValue = (value: string): string | boolean => {
   else { return value; }
 }
 
-export default ({ setSnapshotStats }: CodeTransformerOptions) => async (
+export default ({ setCodeBlockStats: setCodeBlockStats }: CodeTransformerOptions) => async (
   tree: Node
 ) => {
   const codes: [Node, number][] = [];
@@ -37,9 +37,9 @@ export default ({ setSnapshotStats }: CodeTransformerOptions) => async (
 
   const optionKeys = ["lines", "startafter", "endbefore", "dedent", "trim"];
 
-  const stats: SnapshotStats = {
-    totalSnapshots: 0,
-    updatedSnapshots: [],
+  const stats: CodeBlockStats = {
+    totalCodeBlocks: 0,
+    updatedCodeBlocks: [],
   };
 
   for (const [node] of codes) {
@@ -83,9 +83,9 @@ export default ({ setSnapshotStats }: CodeTransformerOptions) => async (
         contentWithLimit = contentWithLimit.trim();
       }
 
-      stats.totalSnapshots++;
+      stats.totalCodeBlocks++;
       if (node["value"] !== contentWithLimit) {
-        stats.updatedSnapshots.push(node["meta"] as string);
+        stats.updatedCodeBlocks.push(node["meta"] as string);
         node["value"] = `${contentWithLimit}`;
       }
     } catch (err) {
@@ -93,7 +93,7 @@ export default ({ setSnapshotStats }: CodeTransformerOptions) => async (
     }
   }
 
-  if (setSnapshotStats) {
-    setSnapshotStats(stats);
+  if (setCodeBlockStats) {
+    setCodeBlockStats(stats);
   }
 };
