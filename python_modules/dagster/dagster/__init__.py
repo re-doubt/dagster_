@@ -287,57 +287,12 @@ from dagster.config.source import BoolSource, StringSource, IntSource  # isort:s
 
 if typing.TYPE_CHECKING:
     # pylint:disable=reimported
-    from dagster.core.definitions import AssetGroup
-    from dagster.core.definitions import DagsterAssetMetadataValue as DagsterAssetMetadataEntryData
-    from dagster.core.definitions import FloatMetadataValue as FloatMetadataEntryData
-    from dagster.core.definitions import IntMetadataValue as IntMetadataEntryData
-    from dagster.core.definitions import JsonMetadataValue as JsonMetadataEntryData
-    from dagster.core.definitions import MarkdownMetadataValue as MarkdownMetadataEntryData
-    from dagster.core.definitions import MetadataEntry as EventMetadataEntry
-    from dagster.core.definitions import MetadataValue as EventMetadata
-    from dagster.core.definitions import PathMetadataValue as PathMetadataEntryData
-    from dagster.core.definitions import (
-        PythonArtifactMetadataValue as PythonArtifactMetadataEntryData,
-    )
-    from dagster.core.definitions import TableMetadataValue as TableMetadataEntryData
-    from dagster.core.definitions import TableSchemaMetadataValue as TableSchemaMetadataEntryData
-    from dagster.core.definitions import TextMetadataValue as TextMetadataEntryData
-    from dagster.core.definitions import UrlMetadataValue as UrlMetadataEntryData
-
+    pass
     # pylint:enable=reimported
 
-_DEPRECATED = {
-    "AssetGroup": (
-        "dagster.core.definitions",
-        "1.0.0",
-        "Instead, place a set of assets wrapped with `with_resources` directly on a repository.",
-    ),
-}
+_DEPRECATED = {}
 
-_DEPRECATED_RENAMED = {
-    "EventMetadataEntry": (MetadataEntry, "1.0.0"),
-    "EventMetadata": (MetadataValue, "1.0.0"),
-    "TextMetadataEntryData": (TextMetadataValue, "1.0.0"),
-    "UrlMetadataEntryData": (UrlMetadataValue, "1.0.0"),
-    "PathMetadataEntryData": (PathMetadataValue, "1.0.0"),
-    "JsonMetadataEntryData": (JsonMetadataValue, "1.0.0"),
-    "MarkdownMetadataEntryData": (MarkdownMetadataValue, "1.0.0"),
-    "PythonArtifactMetadataEntryData": (
-        PythonArtifactMetadataValue,
-        "1.0.0",
-    ),
-    "FloatMetadataEntryData": (FloatMetadataValue, "1.0.0"),
-    "IntMetadataEntryData": (IntMetadataValue, "1.0.0"),
-    "DagsterAssetMetadataEntryData": (
-        DagsterAssetMetadataValue,
-        "1.0.0",
-    ),
-    "TableMetadataEntryData": (TableMetadataValue, "1.0.0"),
-    "TableSchemaMetadataEntryData": (
-        TableSchemaMetadataValue,
-        "1.0.0",
-    ),
-}
+_DEPRECATED_RENAMED = {}
 
 
 def __getattr__(name: str) -> typing.Any:
@@ -369,7 +324,6 @@ pep562(__name__)
 
 __all__ = [
     # Definition
-    "AssetGroup",
     "AssetKey",
     "AssetIn",
     "AssetMaterialization",
