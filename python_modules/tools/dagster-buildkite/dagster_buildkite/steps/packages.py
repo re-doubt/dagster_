@@ -543,7 +543,7 @@ LIBRARY_PACKAGES_WITH_CUSTOM_CONFIG: List[PackageSpec] = [
         ],
     ),
     PackageSpec(
-        ".buildkite/dagster-buildkite",
+        "python_modules/tools/dagster-buildkite",
         run_pytest=False,
     ),
     PackageSpec("scripts", run_pytest=False),
