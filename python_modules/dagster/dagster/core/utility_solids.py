@@ -1,6 +1,11 @@
 from dagster import Output
 from dagster import _check as check
-from dagster._legacy import InputDefinition, OutputDefinition, SolidDefinition, lambda_solid
+from dagster.core.definitions import (
+    InputDefinition,
+    OutputDefinition,
+    SolidDefinition,
+    lambda_solid,
+)
 
 
 def _compute_fn(context, inputs):

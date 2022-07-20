@@ -16,16 +16,22 @@ from dagster import (
     TypeCheck,
 )
 from dagster import _check as check
-from dagster._legacy import ModeDefinition, PipelineDefinition, execute_pipeline, lambda_solid
+from dagster.core.definitions.decorators.solid_decorator import lambda_solid
 from dagster.core.definitions.logger_definition import LoggerDefinition
+from dagster.core.definitions.mode import ModeDefinition
 from dagster.core.definitions.pipeline_base import InMemoryPipeline
+from dagster.core.definitions.pipeline_definition import PipelineDefinition
 from dagster.core.definitions.resource_definition import ScopedResourcesBuilder
 from dagster.core.definitions.solid_definition import (
     CompositeSolidDefinition,
     NodeDefinition,
     SolidDefinition,
 )
-from dagster.core.execution.api import create_execution_plan, scoped_pipeline_context
+from dagster.core.execution.api import (
+    create_execution_plan,
+    execute_pipeline,
+    scoped_pipeline_context,
+)
 from dagster.core.execution.context.system import PlanExecutionContext
 from dagster.core.execution.context_creation_pipeline import (
     create_context_creation_data,
