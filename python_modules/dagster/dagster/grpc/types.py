@@ -236,12 +236,24 @@ class ExecuteStepArgs(
             ),
         )
 
-    def get_command_args(self) -> List[str]:
-        return _get_entry_point(self.pipeline_origin) + [
-            "api",
-            "execute_step",
-            serialize_dagster_namedtuple(self),
-        ]
+    def get_command_args(self, with_args=True) -> List[str]:
+        """
+        Get the command args to run this step. If with_args is False, then get_command_env should
+        be used to pass the args over env vars.
+        """
+        return (
+            _get_entry_point(self.pipeline_origin)
+            + ["api", "execute_step"]
+            + [serialize_dagster_namedtuple(self)]
+            if with_args
+            else []
+        )
+
+    def get_command_env(self) -> Dict[str, str]:
+        """
+        Get the env vars for overriding the click args of this step.
+        """
+        return {"DAGSTER_EXECUTE_STEP_ARGS": serialize_dagster_namedtuple(self)}
 
 
 @whitelist_for_serdes
