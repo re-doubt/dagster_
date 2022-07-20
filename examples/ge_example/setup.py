@@ -12,6 +12,9 @@ setup(
         "dagster-ge",
         "great_expectations>=0.14.12",  # pinned because pip is using the cached wheel for 0.13.14
     ],
+    extras_require={
+        "test": ["dagster[test]"],
+    },
     author="Elementl",
     license="Apache-2.0",
     description="Dagster example for using the Great Expectations integration.",

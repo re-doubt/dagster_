@@ -39,5 +39,8 @@ if __name__ == "__main__":
             "requests",
             "gql",
         ],
+        extras_require={
+            "test": ["dagster[test]"],
+        },
         entry_points={"console_scripts": ["dagster-graphql = dagster_graphql.cli:main"]},
     )

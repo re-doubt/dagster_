@@ -40,5 +40,5 @@ setup(
         "sklearn",
         "snowflake-sqlalchemy",
     ],
-    extras_require={"tests": ["mypy", "pylint", "pytest"]},
+    extras_require={"test": ["dagster[test]"]},
 )

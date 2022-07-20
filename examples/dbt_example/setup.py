@@ -17,6 +17,9 @@ setup(
         "dbt-core",
         "dbt-postgres",
     ],
+    extras_require={
+        "test": ["dagster[test]"],
+    },
     author="Elementl",
     license="Apache-2.0",
     description="Dagster example for integrating with dbt.",

@@ -9,6 +9,9 @@ setup(
         "dagster",
         "pandas",
     ],
+    extras_require={
+        "test": ["dagster[test]"],
+    },
     include_package_data=True,
     author="Elementl",
     license="Apache-2.0",

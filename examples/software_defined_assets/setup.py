@@ -18,5 +18,5 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    extras_require={"test": ["pandas", "pyarrow; python_version < '3.9'", "pyspark"]},
+    extras_require={"test": ["dagster[test]", "pandas", "pyarrow; python_version < '3.9'", "pyspark"]},
 )

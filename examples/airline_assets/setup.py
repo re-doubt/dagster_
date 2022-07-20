@@ -5,7 +5,6 @@ setup(
     version="0+dev",
     author_email="hello@elementl.com",
     packages=["airline_assets"],  # same as name
-    install_requires=["dagster", "pandas"],  # external packages as dependencies
     author="Elementl",
     license="Apache-2.0",
     description="Dagster example of op and graph-backed assets.",
@@ -18,4 +17,8 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
+    install_requires=["dagster", "pandas"],  # external packages as dependencies
+    extras_require={
+        "test": ["dagster[test]"],
+    },
 )

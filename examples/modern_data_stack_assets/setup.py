@@ -26,5 +26,5 @@ setup(
         "dbt-core",
         "dbt-postgres",
     ],
-    extras_require={"tests": ["mypy", "pylint", "pytest"]},
+    extras_require={"test": ["dagster[test]"]},
 )

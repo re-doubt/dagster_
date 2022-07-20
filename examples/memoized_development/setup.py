@@ -6,6 +6,9 @@ setup(
     author_email="hello@elementl.com",
     packages=["memoized_development"],  # same as name
     install_requires=["dagster"],  # external packages as dependencies
+    extras_require={
+        "test": ["dagster[test]"],
+    },
     author="Elementl",
     license="Apache-2.0",
     description="Example for using versioning and memoization with Dagster..",

@@ -1,4 +1,4 @@
-from setuptools import setup  # type: ignore
+from setuptools import setup
 
 setup(
     name="run_attribution_example",
@@ -18,5 +18,5 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-    extras_require={"test": ["pytest", "mock"]},
+    extras_require={"test": ["dagster[test]"]},
 )

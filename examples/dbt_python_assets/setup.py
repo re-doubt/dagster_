@@ -24,5 +24,5 @@ setup(
         "dbt-core",
         "dbt-duckdb",
     ],
-    extras_require={"tests": ["mypy", "pylint", "pytest"]},
+    extras_require={"test": ["dagster[test]"]},
 )
