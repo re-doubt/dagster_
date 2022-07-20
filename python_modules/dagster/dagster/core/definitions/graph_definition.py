@@ -30,7 +30,6 @@ from dagster.core.definitions.resource_definition import ResourceDefinition
 from dagster.core.definitions.utils import check_valid_name
 from dagster.core.errors import DagsterInvalidConfigError, DagsterInvalidDefinitionError
 from dagster.core.selector.subset_selector import AssetSelectionData
-from dagster.core.storage.io_manager import io_manager
 from dagster.core.types.dagster_type import (
     DagsterType,
     DagsterTypeKind,
@@ -604,48 +603,9 @@ class GraphDefinition(NodeDefinition):
         )
         input_values = check.opt_mapping_param(input_values, "input_values")
 
-        if resource_defs and DEFAULT_IO_MANAGER_KEY in resource_defs:
-            resource_defs_with_defaults = resource_defs
-        else:
-            resource_defs_with_defaults = merge_dicts(
-                {DEFAULT_IO_MANAGER_KEY: default_job_io_manager}, resource_defs or {}
-            )
-
         hooks = check.opt_set_param(hooks, "hooks", of_type=HookDefinition)
         op_retry_policy = check.opt_inst_param(op_retry_policy, "op_retry_policy", RetryPolicy)
         op_selection = check.opt_list_param(op_selection, "op_selection", of_type=str)
-        presets = []
-        config_mapping = None
-        partitioned_config = None
-
-        if partitions_def:
-            check.inst_param(partitions_def, "partitions_def", PartitionsDefinition)
-            if isinstance(config, (ConfigMapping, PartitionedConfig)):
-                check.failed(
-                    "Can't supply a ConfigMapping or PartitionedConfig for 'config' when 'partitions_def' is supplied."
-                )
-            hardcoded_config = config if config else {}
-            partitioned_config = PartitionedConfig(partitions_def, lambda _: hardcoded_config)
-
-        if isinstance(config, ConfigMapping):
-            config_mapping = config
-        elif isinstance(config, PartitionedConfig):
-            partitioned_config = config
-        elif isinstance(config, dict):
-            presets = [PresetDefinition(name="default", run_config=config)]
-            # Using config mapping here is a trick to make it so that the preset will be used even
-            # when no config is supplied for the job.
-            config_mapping = _config_mapping_with_default_value(
-                self._get_config_schema(resource_defs_with_defaults, executor_def, logger_defs),
-                config,
-                job_name,
-                self.name,
-            )
-        elif config is not None:
-            check.failed(
-                f"config param must be a ConfigMapping, a PartitionedConfig, or a dictionary, but "
-                f"is an object of type {type(config)}"
-            )
 
         return JobDefinition(
             name=job_name,
@@ -654,9 +614,8 @@ class GraphDefinition(NodeDefinition):
             resource_defs=resource_defs_with_defaults,
             logger_defs=logger_defs,
             executor_def=executor_def,
-            config_mapping=config_mapping,
-            partitioned_config=partitioned_config,
-            preset_defs=presets,
+            config=config,
+            partitions_def=partitions_def,
             tags=tags,
             metadata=metadata,
             hook_defs=hooks,
@@ -1117,13 +1076,3 @@ def _config_mapping_with_default_value(
     return ConfigMapping(
         config_fn=config_fn, config_schema=config_schema, receive_processed_config_values=False
     )
-
-
-@io_manager(
-    description="Built-in filesystem IO manager that stores and retrieves values using pickling."
-)
-def default_job_io_manager(init_context: "InitResourceContext"):
-    from dagster.core.storage.fs_io_manager import PickledObjectFilesystemIOManager
-
-    instance = check.not_none(init_context.instance)
-    return PickledObjectFilesystemIOManager(base_dir=instance.storage_directory())
