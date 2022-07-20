@@ -1,4 +1,5 @@
-from dagster import DagsterInstance, reexecute_pipeline
+from dagster import DagsterInstance
+from dagster._legacy import reexecute_pipeline
 from docs_snippets.guides.dagster.reexecution.unreliable_job import unreliable_job
 
 instance = DagsterInstance.ephemeral()

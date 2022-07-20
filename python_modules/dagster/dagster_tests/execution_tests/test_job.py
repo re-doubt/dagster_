@@ -7,13 +7,13 @@ from dagster import (
     DagsterInvariantViolationError,
     Field,
     StringSource,
-    execute_pipeline,
     graph,
     job,
     op,
     reconstructable,
     static_partitioned_config,
 )
+from dagster._legacy import execute_pipeline
 from dagster.core.storage.tags import PARTITION_NAME_TAG
 from dagster.core.test_utils import environ, instance_for_test
 

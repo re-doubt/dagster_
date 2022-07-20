@@ -2,12 +2,8 @@ import re
 
 import pytest
 
-from dagster import (
-    execute_pipeline,
-    execute_pipeline_iterator,
-    reexecute_pipeline,
-    reexecute_pipeline_iterator,
-)
+from dagster import reexecute_pipeline_iterator
+from dagster._legacy import execute_pipeline, execute_pipeline_iterator, reexecute_pipeline
 from dagster.core.definitions.events import AssetKey
 from dagster.core.definitions.pipeline_base import InMemoryPipeline
 from dagster.core.errors import DagsterExecutionStepNotFoundError, DagsterInvalidSubsetError

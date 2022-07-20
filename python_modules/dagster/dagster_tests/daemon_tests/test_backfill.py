@@ -8,16 +8,8 @@ from contextlib import contextmanager
 import pendulum
 import pytest
 
-from dagster import (
-    Any,
-    Field,
-    ModeDefinition,
-    daily_partitioned_config,
-    fs_io_manager,
-    graph,
-    repository,
-)
-from dagster._legacy import pipeline, solid
+from dagster import Any, Field, daily_partitioned_config, fs_io_manager, graph, repository
+from dagster._legacy import ModeDefinition, pipeline, solid
 from dagster.core.definitions import Partition, PartitionSetDefinition
 from dagster.core.execution.api import execute_pipeline
 from dagster.core.execution.backfill import BulkActionStatus, PartitionBackfill

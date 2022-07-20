@@ -1,16 +1,5 @@
-from dagster import (
-    Array,
-    Enum,
-    EnumValue,
-    Field,
-    ModeDefinition,
-    Noneable,
-    ScalarUnion,
-    Selector,
-    Shape,
-    resource,
-)
-from dagster._legacy import pipeline, solid
+from dagster import Array, Enum, EnumValue, Field, Noneable, ScalarUnion, Selector, Shape, resource
+from dagster._legacy import ModeDefinition, pipeline, solid
 from dagster.config.config_type import ConfigTypeKind
 from dagster.config.field import resolve_to_config_type
 from dagster.config.field_utils import Map

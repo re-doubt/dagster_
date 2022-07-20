@@ -10,7 +10,8 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.utils.dates import days_ago
 from dagster_airflow.dagster_pipeline_factory import make_dagster_pipeline_from_airflow_dag
 
-from dagster import DagsterEventType, execute_pipeline
+from dagster import DagsterEventType
+from dagster._legacy import execute_pipeline
 from dagster.core.instance import AIRFLOW_EXECUTION_DATE_STR
 from dagster.core.storage.compute_log_manager import ComputeIOType
 from dagster.core.test_utils import instance_for_test
@@ -231,7 +232,14 @@ def test_template_task_dag():
 
 
 def intercept_spark_submit(*args, **kwargs):
-    if args[0] == ["spark-submit", "--master", "", "--name", "airflow-spark", "some_path.py"]:
+    if args[0] == [
+        "spark-submit",
+        "--master",
+        "",
+        "--name",
+        "airflow-spark",
+        "some_path.py",
+    ]:
         m = mock.MagicMock()
         m.stdout.readline.return_value = ""
         m.wait.return_value = 0

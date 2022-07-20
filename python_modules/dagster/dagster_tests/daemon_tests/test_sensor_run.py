@@ -17,11 +17,10 @@ from dagster import (
     Field,
     Output,
     graph,
-    pipeline_failure_sensor,
     repository,
     run_failure_sensor,
 )
-from dagster._legacy import pipeline, solid
+from dagster._legacy import pipeline, pipeline_failure_sensor, solid
 from dagster.core.definitions.decorators.sensor_decorator import asset_sensor, sensor
 from dagster.core.definitions.run_request import InstigatorType
 from dagster.core.definitions.run_status_sensor_definition import run_status_sensor
@@ -2287,7 +2286,8 @@ def test_status_in_code_sensor(executor):
                 assert (
                     len(
                         instance.get_ticks(
-                            never_running_origin.get_id(), not_running_sensor.selector_id
+                            never_running_origin.get_id(),
+                            not_running_sensor.selector_id,
                         )
                     )
                     == 0
@@ -2319,7 +2319,8 @@ def test_status_in_code_sensor(executor):
                 assert (
                     len(
                         instance.get_ticks(
-                            never_running_origin.get_id(), not_running_sensor.selector_id
+                            never_running_origin.get_id(),
+                            not_running_sensor.selector_id,
                         )
                     )
                     == 0
@@ -2351,7 +2352,8 @@ def test_status_in_code_sensor(executor):
                 assert (
                     len(
                         instance.get_ticks(
-                            never_running_origin.get_id(), not_running_sensor.selector_id
+                            never_running_origin.get_id(),
+                            not_running_sensor.selector_id,
                         )
                     )
                     == 0

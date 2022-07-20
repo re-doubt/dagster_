@@ -11,14 +11,12 @@ from dagster import (
     DagsterInvariantViolationError,
     DependencyDefinition,
     Failure,
-    ModeDefinition,
     NodeInvocation,
-    PipelineDefinition,
     RepositoryDefinition,
     TypeCheck,
 )
 from dagster import _check as check
-from dagster import execute_pipeline, lambda_solid
+from dagster._legacy import ModeDefinition, PipelineDefinition, execute_pipeline, lambda_solid
 from dagster.core.definitions.logger_definition import LoggerDefinition
 from dagster.core.definitions.pipeline_base import InMemoryPipeline
 from dagster.core.definitions.resource_definition import ScopedResourcesBuilder
@@ -77,7 +75,11 @@ def create_test_pipeline_execution_context(
     instance = DagsterInstance.ephemeral()
     execution_plan = create_execution_plan(pipeline=pipeline_def, run_config=run_config)
     creation_data = create_context_creation_data(
-        InMemoryPipeline(pipeline_def), execution_plan, run_config, pipeline_run, instance
+        InMemoryPipeline(pipeline_def),
+        execution_plan,
+        run_config,
+        pipeline_run,
+        instance,
     )
     log_manager = create_log_manager(creation_data)
     scoped_resources_builder = ScopedResourcesBuilder()

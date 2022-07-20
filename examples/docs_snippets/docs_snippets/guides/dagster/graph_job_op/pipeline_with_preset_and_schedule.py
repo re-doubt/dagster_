@@ -1,5 +1,5 @@
-from dagster import PresetDefinition, schedule
-from dagster._legacy import pipeline, solid
+from dagster import schedule
+from dagster._legacy import PresetDefinition, pipeline, solid
 
 
 @solid(config_schema={"param": str})

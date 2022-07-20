@@ -2,17 +2,9 @@ import os
 import pickle
 import uuid
 
-from dagster import (
-    AssetMaterialization,
-    ExpectationResult,
-    Failure,
-    Materialization,
-    ModeDefinition,
-    PipelineDefinition,
-    SolidDefinition,
-    TypeCheck,
-)
+from dagster import AssetMaterialization, ExpectationResult, Failure, TypeCheck
 from dagster import _check as check
+from dagster._legacy import Materialization, ModeDefinition, PipelineDefinition, SolidDefinition
 from dagster.core.definitions.dependency import NodeHandle
 from dagster.core.definitions.events import RetryRequested
 from dagster.core.definitions.pipeline_base import InMemoryPipeline

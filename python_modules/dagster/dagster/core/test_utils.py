@@ -12,10 +12,10 @@ from contextlib import ExitStack, contextmanager
 import pendulum
 import yaml
 
-from dagster import ModeDefinition, Shape
+from dagster import Shape
 from dagster import _check as check
-from dagster import composite_solid, fs_io_manager
-from dagster._legacy import pipeline, solid
+from dagster import fs_io_manager
+from dagster._legacy import ModeDefinition, composite_solid, pipeline, solid
 from dagster.config import Field
 from dagster.config.config_type import Array
 from dagster.core.host_representation.origin import (
@@ -247,7 +247,11 @@ def poll_for_finished_run(instance, run_id=None, timeout=20, run_tags=None):
     filters = RunsFilter(
         run_ids=[run_id] if run_id else None,
         tags=run_tags,
-        statuses=[PipelineRunStatus.SUCCESS, PipelineRunStatus.FAILURE, PipelineRunStatus.CANCELED],
+        statuses=[
+            PipelineRunStatus.SUCCESS,
+            PipelineRunStatus.FAILURE,
+            PipelineRunStatus.CANCELED,
+        ],
     )
 
     while True:

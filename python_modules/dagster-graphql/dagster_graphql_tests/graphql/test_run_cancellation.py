@@ -6,7 +6,7 @@ import pytest
 from dagster_graphql.client.query import LAUNCH_PIPELINE_EXECUTION_MUTATION
 from dagster_graphql.test.utils import execute_dagster_graphql, infer_pipeline_selector
 
-from dagster import execute_pipeline
+from dagster._legacy import execute_pipeline
 from dagster.core.definitions.reconstruct import ReconstructableRepository
 from dagster.core.storage.pipeline_run import PipelineRunStatus
 from dagster.grpc.types import CancelExecutionRequest
@@ -129,7 +129,10 @@ class TestQueuedRunTermination(QueuedRunCoordinatorTestSuite):
             result = execute_dagster_graphql(
                 graphql_context,
                 RUN_CANCELLATION_QUERY,
-                variables={"runId": run_id, "terminatePolicy": "MARK_AS_CANCELED_IMMEDIATELY"},
+                variables={
+                    "runId": run_id,
+                    "terminatePolicy": "MARK_AS_CANCELED_IMMEDIATELY",
+                },
             )
             assert result.data["terminatePipelineExecution"]["__typename"] == "TerminateRunSuccess"
 
@@ -212,7 +215,10 @@ class TestRunVariantTermination(RunTerminationTestSuite):
             result = execute_dagster_graphql(
                 graphql_context,
                 RUN_CANCELLATION_QUERY,
-                variables={"runId": run_id, "terminatePolicy": "MARK_AS_CANCELED_IMMEDIATELY"},
+                variables={
+                    "runId": run_id,
+                    "terminatePolicy": "MARK_AS_CANCELED_IMMEDIATELY",
+                },
             )
             assert result.data["terminatePipelineExecution"]["__typename"] == "TerminateRunSuccess"
 
@@ -273,7 +279,10 @@ class TestRunVariantTermination(RunTerminationTestSuite):
             result = execute_dagster_graphql(
                 graphql_context,
                 RUN_CANCELLATION_QUERY,
-                variables={"runId": run_id, "terminatePolicy": "MARK_AS_CANCELED_IMMEDIATELY"},
+                variables={
+                    "runId": run_id,
+                    "terminatePolicy": "MARK_AS_CANCELED_IMMEDIATELY",
+                },
             )
 
             assert result.data["terminatePipelineExecution"]["__typename"] == "TerminateRunSuccess"
@@ -305,7 +314,9 @@ class TestRunVariantTermination(RunTerminationTestSuite):
         time.sleep(0.05)  # guarantee execution finish
 
         result = execute_dagster_graphql(
-            graphql_context, RUN_CANCELLATION_QUERY, variables={"runId": pipeline_result.run_id}
+            graphql_context,
+            RUN_CANCELLATION_QUERY,
+            variables={"runId": pipeline_result.run_id},
         )
 
         assert result.data["terminatePipelineExecution"]["__typename"] == "TerminateRunFailure"
@@ -359,6 +370,8 @@ class TestRunVariantTermination(RunTerminationTestSuite):
                 time.sleep(0.1)
 
             result = execute_dagster_graphql(
-                graphql_context, BACKCOMPAT_LEGACY_TERMINATE_PIPELINE, variables={"runId": run_id}
+                graphql_context,
+                BACKCOMPAT_LEGACY_TERMINATE_PIPELINE,
+                variables={"runId": run_id},
             )
             assert result.data["terminatePipelineExecution"]["run"]["runId"] == run_id

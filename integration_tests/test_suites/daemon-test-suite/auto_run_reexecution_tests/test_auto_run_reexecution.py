@@ -2,7 +2,8 @@
 import logging
 import time
 
-from dagster import DagsterEvent, DagsterEventType, EventLogEntry, PipelineRunStatus
+from dagster import DagsterEvent, DagsterEventType, EventLogEntry
+from dagster._legacy import PipelineRunStatus
 from dagster.core.execution.api import create_execution_plan
 from dagster.core.execution.plan.resume_retry import ReexecutionStrategy
 from dagster.core.instance import DagsterInstance

@@ -8,7 +8,7 @@ from dagster_graphql.test.utils import (
     infer_repository_selector,
 )
 
-from dagster import PipelineRun, PipelineRunStatus
+from dagster._legacy import PipelineRun, PipelineRunStatus
 from dagster.core.execution.backfill import BulkActionStatus
 from dagster.core.storage.tags import PARTITION_NAME_TAG
 from dagster.core.test_utils import create_run_for_test
@@ -101,7 +101,10 @@ def _seed_runs(graphql_context, partition_runs: List[Tuple[str, PipelineRunStatu
         create_run_for_test(
             instance=graphql_context.instance,
             status=status,
-            tags={**PipelineRun.tags_for_backfill_id(backfill_id), PARTITION_NAME_TAG: partition},
+            tags={
+                **PipelineRun.tags_for_backfill_id(backfill_id),
+                PARTITION_NAME_TAG: partition,
+            },
         )
 
 
@@ -128,7 +131,9 @@ class TestDaemonPartitionBackfill(ExecutingGraphQLContextTestMatrix):
         backfill_id = result.data["launchPartitionBackfill"]["backfillId"]
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
 
         assert not result.errors
@@ -197,7 +202,9 @@ class TestDaemonPartitionBackfill(ExecutingGraphQLContextTestMatrix):
         backfill_id = result.data["launchPartitionBackfill"]["backfillId"]
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
 
         assert not result.errors
@@ -230,7 +237,9 @@ class TestDaemonPartitionBackfill(ExecutingGraphQLContextTestMatrix):
         backfill_id = result.data["launchPartitionBackfill"]["backfillId"]
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
 
         assert not result.errors
@@ -241,13 +250,17 @@ class TestDaemonPartitionBackfill(ExecutingGraphQLContextTestMatrix):
         assert len(result.data["partitionBackfillOrError"]["partitionNames"]) == 2
 
         result = execute_dagster_graphql(
-            graphql_context, CANCEL_BACKFILL_MUTATION, variables={"backfillId": backfill_id}
+            graphql_context,
+            CANCEL_BACKFILL_MUTATION,
+            variables={"backfillId": backfill_id},
         )
         assert result.data
         assert result.data["cancelPartitionBackfill"]["__typename"] == "CancelBackfillSuccess"
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
         assert not result.errors
         assert result.data
@@ -277,7 +290,9 @@ class TestDaemonPartitionBackfill(ExecutingGraphQLContextTestMatrix):
         backfill_id = result.data["launchPartitionBackfill"]["backfillId"]
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
 
         assert not result.errors
@@ -292,13 +307,17 @@ class TestDaemonPartitionBackfill(ExecutingGraphQLContextTestMatrix):
         graphql_context.instance.update_backfill(backfill.with_status(BulkActionStatus.FAILED))
 
         result = execute_dagster_graphql(
-            graphql_context, RESUME_BACKFILL_MUTATION, variables={"backfillId": backfill_id}
+            graphql_context,
+            RESUME_BACKFILL_MUTATION,
+            variables={"backfillId": backfill_id},
         )
         assert result.data
         assert result.data["resumePartitionBackfill"]["__typename"] == "ResumeBackfillSuccess"
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
         assert not result.errors
         assert result.data
@@ -342,7 +361,9 @@ class TestDaemonPartitionBackfill(ExecutingGraphQLContextTestMatrix):
         )
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
 
         assert not result.errors
@@ -367,7 +388,9 @@ class TestDaemonPartitionBackfill(ExecutingGraphQLContextTestMatrix):
         graphql_context.instance.update_backfill(backfill.with_status(BulkActionStatus.COMPLETED))
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
         assert result.data["partitionBackfillOrError"]["status"] == "COMPLETED"
         assert result.data["partitionBackfillOrError"]["backfillStatus"] == "IN_PROGRESS"
@@ -408,7 +431,9 @@ class TestDaemonPartitionBackfill(ExecutingGraphQLContextTestMatrix):
         )
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
 
         assert not result.errors
@@ -463,7 +488,9 @@ class TestDaemonPartitionBackfill(ExecutingGraphQLContextTestMatrix):
         )
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
 
         assert not result.errors
@@ -534,7 +561,9 @@ class TestLaunchDaemonBackfillFromFailure(ExecutingGraphQLContextTestMatrix):
         backfill_id = result.data["launchPartitionBackfill"]["backfillId"]
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
         assert not result.errors
         assert result.data
@@ -567,7 +596,9 @@ class TestLaunchDaemonBackfillFromFailure(ExecutingGraphQLContextTestMatrix):
         backfill_id = result.data["launchPartitionBackfill"]["backfillId"]
 
         result = execute_dagster_graphql(
-            graphql_context, PARTITION_PROGRESS_QUERY, variables={"backfillId": backfill_id}
+            graphql_context,
+            PARTITION_PROGRESS_QUERY,
+            variables={"backfillId": backfill_id},
         )
 
         assert not result.errors

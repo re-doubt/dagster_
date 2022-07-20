@@ -1,6 +1,6 @@
 from dagstermill.manager import MANAGER_FOR_NOTEBOOK_INSTANCE
 
-from dagster import SolidDefinition
+from dagster._legacy import SolidDefinition
 from dagster.core.definitions.dependency import Node
 from dagster.core.system_config.objects import ResolvedRunConfig
 

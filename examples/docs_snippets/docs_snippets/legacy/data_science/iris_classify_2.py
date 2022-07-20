@@ -1,6 +1,7 @@
 import dagstermill as dm
 
-from dagster import InputDefinition, job
+from dagster import job
+from dagster._legacy import InputDefinition
 from dagster.utils import script_relative_path
 from docs_snippets.legacy.data_science.download_file import download_file
 

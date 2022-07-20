@@ -10,8 +10,9 @@ import pytest
 from dagstermill import DagstermillError
 from dagstermill.manager import Manager
 
-from dagster import AssetMaterialization, ModeDefinition, ResourceDefinition
+from dagster import AssetMaterialization, ResourceDefinition
 from dagster import _check as check
+from dagster._legacy import ModeDefinition
 from dagster.core.definitions.dependency import NodeHandle
 from dagster.core.definitions.reconstruct import ReconstructablePipeline
 from dagster.core.storage.pipeline_run import PipelineRun, PipelineRunStatus
@@ -100,7 +101,8 @@ def test_out_of_pipeline_manager_yield_complex_result():
 def test_in_pipeline_manager_yield_bad_result():
     with in_pipeline_manager() as manager:
         with pytest.raises(
-            DagstermillError, match="Solid hello_world does not have output named result"
+            DagstermillError,
+            match="Solid hello_world does not have output named result",
         ):
             assert manager.yield_result("foo") == "foo"
 
@@ -134,7 +136,8 @@ def test_in_pipeline_manager_bad_solid():
 def test_in_pipeline_manager_bad_yield_result():
     with in_pipeline_manager() as manager:
         with pytest.raises(
-            DagstermillError, match="Solid hello_world does not have output named result"
+            DagstermillError,
+            match="Solid hello_world does not have output named result",
         ):
             manager.yield_result("foo")
 

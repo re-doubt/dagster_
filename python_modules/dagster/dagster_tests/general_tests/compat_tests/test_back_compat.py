@@ -14,8 +14,8 @@ import sqlalchemy as db
 
 from dagster import AssetKey, AssetMaterialization, Output
 from dagster import _check as check
-from dagster import execute_pipeline, file_relative_path, job
-from dagster._legacy import pipeline, solid
+from dagster import file_relative_path, job
+from dagster._legacy import execute_pipeline, pipeline, solid
 from dagster.cli.debug import DebugRunPayload
 from dagster.core.definitions.dependency import NodeHandle
 from dagster.core.events import DagsterEvent
@@ -628,7 +628,10 @@ def test_external_job_origin_instigator_origin():
 
         @_whitelist_for_serdes(legacy_env)
         class ExternalRepositoryOrigin(
-            namedtuple("_ExternalRepositoryOrigin", "repository_location_origin repository_name")
+            namedtuple(
+                "_ExternalRepositoryOrigin",
+                "repository_location_origin repository_name",
+            )
         ):
             def get_id(self):
                 return create_snapshot_id(self)

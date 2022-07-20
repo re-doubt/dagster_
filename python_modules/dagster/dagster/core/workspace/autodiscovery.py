@@ -6,9 +6,9 @@ from dagster import (
     DagsterInvariantViolationError,
     GraphDefinition,
     JobDefinition,
-    PipelineDefinition,
     RepositoryDefinition,
 )
+from dagster._legacy import PipelineDefinition
 from dagster.core.code_pointer import load_python_file, load_python_module
 from dagster.core.definitions import AssetGroup
 

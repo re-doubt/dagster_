@@ -3,10 +3,9 @@ import pickle
 
 import pytest
 
-from dagster import (
-    DependencyDefinition,
+from dagster import DependencyDefinition, Int
+from dagster._legacy import (
     InputDefinition,
-    Int,
     OutputDefinition,
     PipelineDefinition,
     execute_pipeline,
@@ -190,12 +189,18 @@ def test_pipeline_step_key_subset_execution():
     assert step_events
     assert not os.path.exists(
         os.path.join(
-            instance.storage_directory(), pipeline_reexecution_result.run_id, "add_one", "result"
+            instance.storage_directory(),
+            pipeline_reexecution_result.run_id,
+            "add_one",
+            "result",
         )
     )
     with open(
         os.path.join(
-            instance.storage_directory(), pipeline_reexecution_result.run_id, "add_two", "result"
+            instance.storage_directory(),
+            pipeline_reexecution_result.run_id,
+            "add_two",
+            "result",
         ),
         "rb",
     ) as read_obj:

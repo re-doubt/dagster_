@@ -3,8 +3,8 @@ from contextlib import contextmanager
 
 import pytest
 
-from dagster import lambda_solid, repository
-from dagster._legacy import pipeline
+from dagster import repository
+from dagster._legacy import lambda_solid, pipeline
 from dagster.api.snapshot_repository import sync_get_streaming_external_repositories_data_grpc
 from dagster.core.errors import DagsterUserCodeProcessError
 from dagster.core.host_representation import (
@@ -37,7 +37,8 @@ def test_streaming_external_repositories_error(instance):
         assert repository_location.repository_names == {"does_not_exist"}
 
         with pytest.raises(
-            DagsterUserCodeProcessError, match='Could not find a repository called "does_not_exist"'
+            DagsterUserCodeProcessError,
+            match='Could not find a repository called "does_not_exist"',
         ):
             sync_get_streaming_external_repositories_data_grpc(
                 repository_location.client, repository_location

@@ -2,7 +2,8 @@ import tempfile
 
 import pytest
 
-from dagster import execute_pipeline, file_relative_path
+from dagster import file_relative_path
+from dagster._legacy import execute_pipeline
 from dagster.core.definitions.reconstruct import ReconstructablePipeline
 from dagster.core.test_utils import instance_for_test
 from dagster.utils import pushd

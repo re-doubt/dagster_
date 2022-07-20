@@ -9,9 +9,8 @@ import pendulum
 from tabulate import tabulate
 
 import dagster._check as check
-from dagster import PipelineDefinition
 from dagster import __version__ as dagster_version
-from dagster import execute_pipeline
+from dagster._legacy import PipelineDefinition, execute_pipeline
 from dagster.cli.workspace.cli_target import (
     WORKSPACE_TARGET_WARNING,
     get_external_pipeline_or_job_from_external_repo,
@@ -277,7 +276,9 @@ def print_solid_or_op(
     "preset_defs.",
 )
 @click.option(
-    "--mode", type=click.STRING, help="The name of the mode in which to execute the pipeline."
+    "--mode",
+    type=click.STRING,
+    help="The name of the mode in which to execute the pipeline.",
 )
 def pipeline_list_versions_command(**kwargs):
     with DagsterInstance.get() as instance:
@@ -318,7 +319,8 @@ def add_step_to_table(memoized_plan):
         table.append(
             [
                 "{key}.{output}".format(
-                    key=step_output_handle.step_key, output=step_output_handle.output_name
+                    key=step_output_handle.step_key,
+                    output=step_output_handle.output_name,
                 ),
                 version,
                 "stored"
@@ -347,10 +349,14 @@ def add_step_to_table(memoized_plan):
     "preset_defs.",
 )
 @click.option(
-    "--mode", type=click.STRING, help="The name of the mode in which to execute the pipeline."
+    "--mode",
+    type=click.STRING,
+    help="The name of the mode in which to execute the pipeline.",
 )
 @click.option(
-    "--tags", type=click.STRING, help="JSON string of tags to use for this pipeline/job run"
+    "--tags",
+    type=click.STRING,
+    help="JSON string of tags to use for this pipeline/job run",
 )
 @click.option(
     "-s",
@@ -375,7 +381,9 @@ def pipeline_execute_command(**kwargs):
 
 @telemetry_wrapper
 def execute_execute_command(
-    instance: DagsterInstance, kwargs: Dict[str, object], using_job_op_graph_apis: bool = False
+    instance: DagsterInstance,
+    kwargs: Dict[str, object],
+    using_job_op_graph_apis: bool = False,
 ):
     check.inst_param(instance, "instance", DagsterInstance)
 
@@ -614,7 +622,9 @@ def do_execute_command(
     "preset_defs.",
 )
 @click.option(
-    "--mode", type=click.STRING, help="The name of the mode in which to execute the pipeline."
+    "--mode",
+    type=click.STRING,
+    help="The name of the mode in which to execute the pipeline.",
 )
 @click.option("--tags", type=click.STRING, help="JSON string of tags to use for this pipeline run")
 @click.option(
@@ -632,7 +642,11 @@ def do_execute_command(
         '   ancestors, "other_solid_a" itself, and "other_solid_b" and its direct child solids'
     ),
 )
-@click.option("--run-id", type=click.STRING, help="The ID to give to the launched pipeline/job run")
+@click.option(
+    "--run-id",
+    type=click.STRING,
+    help="The ID to give to the launched pipeline/job run",
+)
 def pipeline_launch_command(**kwargs):
     with DagsterInstance.get() as instance:
         return execute_launch_command(instance, kwargs)
@@ -640,7 +654,9 @@ def pipeline_launch_command(**kwargs):
 
 @telemetry_wrapper
 def execute_launch_command(
-    instance: DagsterInstance, kwargs: Dict[str, str], using_job_op_graph_apis: bool = False
+    instance: DagsterInstance,
+    kwargs: Dict[str, str],
+    using_job_op_graph_apis: bool = False,
 ):
     preset = cast(Optional[str], kwargs.get("preset"))
     mode = cast(Optional[str], kwargs.get("mode"))
@@ -710,7 +726,9 @@ def execute_scaffold_command(cli_args, print_fn, using_job_op_graph_apis=False):
 
 
 def do_scaffold_command(
-    pipeline_def: PipelineDefinition, printer: Callable[..., Any], skip_non_required: bool
+    pipeline_def: PipelineDefinition,
+    printer: Callable[..., Any],
+    skip_non_required: bool,
 ):
     check.inst_param(pipeline_def, "pipeline_def", PipelineDefinition)
     check.callable_param(printer, "printer")
@@ -881,7 +899,9 @@ def validate_partition_slice(partition_names, name, value):
     ),
 )
 @click.option(
-    "--tags", type=click.STRING, help="JSON string of tags to use for this pipeline/job run"
+    "--tags",
+    type=click.STRING,
+    help="JSON string of tags to use for this pipeline/job run",
 )
 @click.option("--noprompt", is_flag=True)
 def pipeline_backfill_command(**kwargs):
@@ -893,12 +913,22 @@ def execute_backfill_command(cli_args, print_fn, instance, using_graph_job_op_ap
     with get_workspace_from_kwargs(instance, version=dagster_version, kwargs=cli_args) as workspace:
         repo_location = get_repository_location_from_workspace(workspace, cli_args.get("location"))
         _execute_backfill_command_at_location(
-            cli_args, print_fn, instance, workspace, repo_location, using_graph_job_op_apis
+            cli_args,
+            print_fn,
+            instance,
+            workspace,
+            repo_location,
+            using_graph_job_op_apis,
         )
 
 
 def _execute_backfill_command_at_location(
-    cli_args, print_fn, instance, workspace, repo_location, using_graph_job_op_apis=False
+    cli_args,
+    print_fn,
+    instance,
+    workspace,
+    repo_location,
+    using_graph_job_op_apis=False,
 ):
     external_repo = get_external_repository_from_repo_location(
         repo_location, cli_args.get("repository")

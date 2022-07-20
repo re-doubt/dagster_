@@ -1,6 +1,7 @@
 from dagster_pyspark.resources import pyspark_resource
 
-from dagster import execute_pipeline, job, multiprocess_executor, op, reconstructable
+from dagster import job, multiprocess_executor, op, reconstructable
+from dagster._legacy import execute_pipeline
 from dagster.core.test_utils import instance_for_test
 
 

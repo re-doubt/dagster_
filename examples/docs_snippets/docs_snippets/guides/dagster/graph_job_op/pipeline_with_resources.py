@@ -1,5 +1,5 @@
-from dagster import ModeDefinition, resource
-from dagster._legacy import pipeline, solid
+from dagster import resource
+from dagster._legacy import ModeDefinition, pipeline, solid
 
 
 @resource
