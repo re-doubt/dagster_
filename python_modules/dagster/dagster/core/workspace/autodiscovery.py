@@ -2,15 +2,15 @@ import inspect
 from types import ModuleType
 from typing import Callable, List, NamedTuple, Optional, Sequence, Type
 
-from dagster import (
-    DagsterInvariantViolationError,
+from dagster.core.code_pointer import load_python_file, load_python_module
+from dagster.core.definitions import (
+    AssetGroup,
     GraphDefinition,
     JobDefinition,
+    PipelineDefinition,
     RepositoryDefinition,
 )
-from dagster._legacy import PipelineDefinition
-from dagster.core.code_pointer import load_python_file, load_python_module
-from dagster.core.definitions import AssetGroup
+from dagster.core.errors import DagsterInvariantViolationError
 
 LOAD_ALL_ASSETS = "<<LOAD_ALL_ASSETS>>"
 
