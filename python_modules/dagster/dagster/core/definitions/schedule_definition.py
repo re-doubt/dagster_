@@ -230,6 +230,7 @@ class ScheduleDefinition:
 
     def __init__(
         self,
+        *,
         name: Optional[str] = None,
         cron_schedule: Optional[str] = None,
         pipeline_name: Optional[str] = None,

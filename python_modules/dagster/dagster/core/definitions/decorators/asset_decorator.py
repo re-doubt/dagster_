@@ -44,13 +44,14 @@ from ..utils import DEFAULT_IO_MANAGER_KEY, NoValueSentinel
 
 @overload
 def asset(
-    name: Callable[..., Any],
+    compute_fn: Callable,
 ) -> AssetsDefinition:
     ...
 
 
 @overload
 def asset(
+    *,
     name: Optional[str] = ...,
     namespace: Optional[Sequence[str]] = ...,
     key_prefix: Optional[CoercibleToAssetKeyPrefix] = None,
@@ -74,7 +75,9 @@ def asset(
 
 
 def asset(
-    name: Optional[Union[Callable[..., Any], Optional[str]]] = None,
+    compute_fn: Optional[Callable] = None,
+    *,
+    name: Optional[str] = None,
     namespace: Optional[Sequence[str]] = None,
     key_prefix: Optional[CoercibleToAssetKeyPrefix] = None,
     ins: Optional[Mapping[str, AssetIn]] = None,
@@ -156,8 +159,8 @@ def asset(
             def my_asset(my_upstream_asset: int) -> int:
                 return my_upstream_asset + 1
     """
-    if callable(name):
-        return _Asset()(name)
+    if compute_fn is not None:
+        return _Asset()(compute_fn)
 
     key_prefix = canonicalize_backcompat_args(
         key_prefix,
@@ -334,6 +337,7 @@ class _Asset:
 
 
 def multi_asset(
+    *,
     outs: Mapping[str, Union[Out, AssetOut]],
     name: Optional[str] = None,
     ins: Optional[Mapping[str, AssetIn]] = None,

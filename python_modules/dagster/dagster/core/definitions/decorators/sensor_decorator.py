@@ -29,6 +29,7 @@ if TYPE_CHECKING:
 
 
 def sensor(
+    *,
     pipeline_name: Optional[str] = None,
     name: Optional[str] = None,
     solid_selection: Optional[List[str]] = None,
@@ -97,6 +98,7 @@ def sensor(
 
 
 def asset_sensor(
+    *,
     asset_key: AssetKey,
     pipeline_name: Optional[str] = None,
     name: Optional[str] = None,

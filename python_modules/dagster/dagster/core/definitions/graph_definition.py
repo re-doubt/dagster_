@@ -190,6 +190,7 @@ class GraphDefinition(NodeDefinition):
 
     def __init__(
         self,
+        *,
         name: str,
         description: Optional[str] = None,
         node_defs: Optional[Sequence[NodeDefinition]] = None,
