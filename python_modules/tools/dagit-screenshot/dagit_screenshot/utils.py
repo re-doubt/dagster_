@@ -56,7 +56,8 @@ def load_spec_db(spec_db_path: str) -> SpecDB:
         db = _load_yaml(spec_db_path)
     else:
         yaml_files = [
-            os.path.relpath(p, start=spec_db_path) for p in glob(f"{spec_db_path}/**/*.yaml", recursive=True)
+            os.path.relpath(p, start=spec_db_path)
+            for p in glob(f"{spec_db_path}/**/*.yaml", recursive=True)
         ]
         db: List[ScreenshotSpec] = []
         if "_global.yaml" in yaml_files:
@@ -66,7 +67,11 @@ def load_spec_db(spec_db_path: str) -> SpecDB:
         for p in yaml_files:
             specs = _load_yaml(os.path.join(spec_db_path, p))
             raw_id_parts = os.path.splitext(p)[0]
-            id_parts = os.path.dirname(raw_id_parts) if os.path.basename(raw_id_parts) == 'index' else raw_id_parts
+            id_parts = (
+                os.path.dirname(raw_id_parts)
+                if os.path.basename(raw_id_parts) == "index"
+                else raw_id_parts
+            )
             for spec in specs:
                 spec["id"] = os.path.join(id_parts, spec["id"])
                 db.append(spec)
@@ -77,9 +82,11 @@ def load_spec_db(spec_db_path: str) -> SpecDB:
 def _is_single_file_spec_db(spec_db_path: str) -> bool:
     return not os.path.isdir(spec_db_path)
 
+
 def _load_yaml(path: str):
     with open(path, "r", encoding="utf8") as f:
         return yaml.safe_load(f)
+
 
 def _load_spec_from_yaml(spec_id: str, yaml_path: str) -> ScreenshotSpec:
     specs = _load_yaml(yaml_path)
