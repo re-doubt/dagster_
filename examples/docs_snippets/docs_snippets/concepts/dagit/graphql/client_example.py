@@ -1,5 +1,6 @@
 # isort: skip_file
-# pylint: disable=W0404
+# pylint: disable=W0404,reimported
+# type: ignore[no-redef]
 # start_setup_marker
 from dagster_graphql import DagsterGraphQLClient
 
@@ -60,10 +61,12 @@ except DagsterGraphQLClientError as exc:
 
 # start_run_status_marker
 from dagster_graphql import DagsterGraphQLClientError
+from dagster import DagsterRunStatus
+
 
 try:
-    status: PipelineRunStatus = client.get_run_status(RUN_ID)
-    if status == PipelineRunStatus.SUCCESS:
+    status: DagsterRunStatus = client.get_run_status(RUN_ID)
+    if status == DagsterRunStatus.SUCCESS:
         do_something_on_success()
     else:
         do_something_else()
@@ -94,11 +97,8 @@ from dagster_graphql import (
     ShutdownRepositoryLocationInfo,
     ShutdownRepositoryLocationStatus,
 )
-from dagster._legacy import PipelineRunStatus
 
-shutdown_info: ShutdownRepositoryLocationInfo = client.shutdown_repository_location(
-    REPO_NAME
-)
+shutdown_info: ShutdownRepositoryLocationInfo = client.shutdown_repository_location(REPO_NAME)
 if shutdown_info.status == ShutdownRepositoryLocationStatus.SUCCESS:
     do_something_on_success()
 else:
