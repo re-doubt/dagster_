@@ -1,7 +1,6 @@
 from dagster import Field, InputDefinition, Nothing, OutputDefinition, Permissive
 from dagster import _check as check
 from dagster import op
-from dagster._legacy import solid
 
 from .databricks import wait_for_run_to_complete
 
@@ -124,7 +123,7 @@ def create_databricks_job_solid(
                 sparkpi()
     """
     return core_create_databricks_job(
-        dagster_decorator=solid,
+        dagster_decorator=op,
         name=name,
         num_inputs=num_inputs,
         description=description,

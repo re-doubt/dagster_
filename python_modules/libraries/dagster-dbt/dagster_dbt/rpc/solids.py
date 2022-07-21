@@ -11,10 +11,11 @@ from dagster import (
     DagsterInvalidDefinitionError,
     Failure,
     Field,
-    InputDefinition,
+    In,
     Int,
     Noneable,
     Nothing,
+    Out,
     Output,
     OutputDefinition,
     Permissive,
@@ -22,7 +23,7 @@ from dagster import (
     String,
 )
 from dagster import _check as check
-from dagster._legacy import solid
+from dagster import op
 from dagster.core.execution.context.compute import SolidExecutionContext
 
 from ..errors import DagsterDbtRpcUnexpectedPollOutputError
@@ -117,16 +118,15 @@ def unwrap_result(poll_rpc_generator) -> DbtRpcOutput:
     return output.value
 
 
-@solid(
+@op(
     description="A solid to invoke dbt run over RPC.",
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[
-        OutputDefinition(
-            name="request_token",
+    ins={"start_after": In(dagster_type=Nothing)},
+    out={
+        "request_token": Out(
             dagster_type=String,
             description="The request token of the invoked dbt run.",
         )
-    ],
+    },
     config_schema={
         "models": Field(
             config=Noneable(Array(String)),
@@ -158,10 +158,10 @@ def dbt_rpc_run(context: SolidExecutionContext) -> String:
     return out.result.get("request_token")
 
 
-@solid(
+@op(
     description="A solid to invoke dbt run over RPC and poll the resulting RPC process until it's complete.",
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[OutputDefinition(name="result", dagster_type=DbtRpcOutput)],
+    ins={"start_after": In(dagster_type=Nothing)},
+    out=Out(dagster_type=DbtRpcOutput),
     config_schema={
         "models": Field(
             config=Noneable(Array(String)),
@@ -275,16 +275,15 @@ def dbt_rpc_run_and_wait(context: SolidExecutionContext) -> DbtRpcOutput:
     )
 
 
-@solid(
+@op(
     description="A solid to invoke dbt test over RPC.",
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[
-        OutputDefinition(
-            name="request_token",
+    ins={"start_after": In(dagster_type=Nothing)},
+    out={
+        "request_token": Out(
             dagster_type=String,
             description="The request token of the invoked dbt test.",
         )
-    ],
+    },
     config_schema={
         "models": Field(
             config=Noneable(Array(String)),
@@ -331,13 +330,13 @@ def dbt_rpc_test(context: SolidExecutionContext) -> String:
     return out.result.get("request_token")
 
 
-@solid(
+@op(
     description=(
         "A solid to invoke dbt test over RPC and poll the resulting RPC process until it's "
         "complete."
     ),
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[OutputDefinition(name="result", dagster_type=DbtRpcOutput)],
+    ins={"start_after": In(dagster_type=Nothing)},
+    out=Out(dagster_type=DbtRpcOutput),
     config_schema={
         "models": Field(
             config=Noneable(Array(String)),
@@ -411,16 +410,15 @@ def dbt_rpc_test_and_wait(context: SolidExecutionContext) -> DbtRpcOutput:
     )
 
 
-@solid(
+@op(
     description="A solid to invoke a dbt run operation over RPC.",
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[
-        OutputDefinition(
-            name="request_token",
+    ins={"start_after": In(dagster_type=Nothing)},
+    out={
+        "request_token": Out(
             dagster_type=String,
             description="The request token of the invoked dbt run operation.",
         )
-    ],
+    },
     config_schema={
         "macro": Field(
             config=String,
@@ -452,13 +450,13 @@ def dbt_rpc_run_operation(context: SolidExecutionContext) -> String:
     return out.result.get("request_token")
 
 
-@solid(
+@op(
     description=(
         "A solid to invoke a dbt run operation over RPC and poll the resulting RPC process until "
         "it's complete."
     ),
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[OutputDefinition(name="result", dagster_type=DbtRpcOutput)],
+    ins={"start_after": In(dagster_type=Nothing)},
+    out=Out(dagster_type=DbtRpcOutput),
     config_schema={
         "macro": Field(
             config=String,
@@ -516,16 +514,15 @@ def dbt_rpc_run_operation_and_wait(context: SolidExecutionContext) -> DbtRpcOutp
     )
 
 
-@solid(
+@op(
     description="A solid to invoke a dbt snapshot over RPC.",
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[
-        OutputDefinition(
-            name="request_token",
+    ins={"start_after": In(dagster_type=Nothing)},
+    out={
+        "request_token": Out(
             dagster_type=String,
             description="The request token of the invoked dbt snapshot.",
         )
-    ],
+    },
     config_schema={
         "select": Field(
             config=Noneable(Array(String)),
@@ -558,13 +555,13 @@ def dbt_rpc_snapshot(context: SolidExecutionContext) -> String:
     return out.result.get("request_token")
 
 
-@solid(
+@op(
     description=(
         "A solid to invoke a dbt snapshot over RPC and poll the resulting RPC process until "
         "it's complete."
     ),
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[OutputDefinition(name="result", dagster_type=DbtRpcOutput)],
+    ins={"start_after": In(dagster_type=Nothing)},
+    out=Out(dagster_type=DbtRpcOutput),
     config_schema={
         "select": Field(
             config=Noneable(Array(String)),
@@ -638,16 +635,15 @@ def dbt_rpc_snapshot_and_wait(context: SolidExecutionContext) -> DbtRpcOutput:
     )
 
 
-@solid(
+@op(
     description="A solid to invoke dbt source snapshot-freshness over RPC.",
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[
-        OutputDefinition(
-            name="request_token",
+    ins={"start_after": In(dagster_type=Nothing)},
+    out={
+        "request_token": Out(
             dagster_type=String,
             description="The request token of the invoked dbt snapshot.",
         )
-    ],
+    },
     config_schema={
         "select": Field(
             config=Noneable(Array(String)),
@@ -690,13 +686,13 @@ def dbt_rpc_snapshot_freshness(context: SolidExecutionContext) -> String:
     return out.result.get("request_token")
 
 
-@solid(
+@op(
     description=(
         "A solid to invoke dbt source snapshot-freshness over RPC and poll the resulting "
         "RPC process until it's complete."
     ),
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[OutputDefinition(name="result", dagster_type=DbtRpcOutput)],
+    ins={"start_after": In(dagster_type=Nothing)},
+    out=Out(dagster_type=DbtRpcOutput),
     config_schema={
         "select": Field(
             config=Noneable(Array(String)),
@@ -765,17 +761,13 @@ def dbt_rpc_snapshot_freshness_and_wait(context: SolidExecutionContext) -> DbtRp
     )
 
 
-@solid(
+@op(
     description="A solid to compile a SQL query in context of a dbt project over RPC.",
-    input_defs=[
-        InputDefinition(name="start_after", dagster_type=Nothing),
-        InputDefinition(
-            name="sql", description="The SQL query to be compiled.", dagster_type=String
-        ),
-    ],
-    output_defs=[
-        OutputDefinition(name="sql", description="The compiled SQL query.", dagster_type=String)
-    ],
+    ins={
+        "start_after": In(dagster_type=Nothing),
+        "sql": In(description="The SQL query to be compiled.", dagster_type=String),
+    },
+    out={"sql": Out(description="The compiled SQL query.", dagster_type=String)},
     config_schema={
         "name": Field(config=String),
         "interval": Field(
@@ -829,7 +821,7 @@ def create_dbt_rpc_run_sql_solid(
     """This function is a factory which constructs a solid that will copy the results of a SQL query
     run within the context of a dbt project to a pandas ``DataFrame``.
 
-    Any kwargs passed to this function will be passed along to the underlying :func:`@solid
+    Any kwargs passed to this function will be passed along to the underlying :func:`@op
     <dagster.solid>` decorator. However, note that overriding ``config_schema``, ``input_defs``, and
     ``required_resource_keys`` is not allowed and will throw a :class:`DagsterInvalidDefinitionError
     <dagster.DagsterInvalidDefinitionError>`.
@@ -860,19 +852,17 @@ def create_dbt_rpc_run_sql_solid(
     if "required_resource_keys" in kwargs:
         raise DagsterInvalidDefinitionError("Overriding required_resource_keys is not supported.")
 
-    @solid(
+    @op(
         name=name,
         description=kwargs.pop(
             "description",
             "A solid to run a SQL query in context of a dbt project over RPC and return the "
             "results in a pandas DataFrame.",
         ),
-        input_defs=[
-            InputDefinition(name="start_after", dagster_type=Nothing),
-            InputDefinition(
-                name="sql", description="The SQL query to be run.", dagster_type=String
-            ),
-        ],
+        ins={
+            "start_after": In(dagster_type=Nothing),
+            "sql": In(description="The SQL query to be run.", dagster_type=String),
+        },
         output_defs=[
             output_def
             or OutputDefinition(
@@ -925,16 +915,15 @@ def create_dbt_rpc_run_sql_solid(
     return _dbt_rpc_run_sql
 
 
-@solid(
+@op(
     description="A solid to invoke dbt seed over RPC.",
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[
-        OutputDefinition(
-            name="request_token",
-            description="The request token of the invoked dbt seed.",
+    ins={"start_after": In(dagster_type=Nothing)},
+    out={
+        "request_token": Out(
             dagster_type=String,
+            description="The request token of the invoked dbt seed.",
         ),
-    ],
+    },
     config_schema={
         "show": Field(
             config=Bool,
@@ -963,13 +952,13 @@ def dbt_rpc_seed(context: SolidExecutionContext) -> String:
     return out.result.get("request_token")
 
 
-@solid(
+@op(
     description=(
         "A solid to invoke dbt seed over RPC and poll the resulting RPC process until it's "
         "complete."
     ),
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[OutputDefinition(name="result", dagster_type=DbtRpcOutput)],
+    ins={"start_after": In(dagster_type=Nothing)},
+    out=Out(dagster_type=DbtRpcOutput),
     config_schema={
         "show": Field(
             config=Bool,
@@ -1024,16 +1013,14 @@ def dbt_rpc_seed_and_wait(context: SolidExecutionContext) -> DbtRpcOutput:
     )
 
 
-@solid(
+@op(
     description="A solid to invoke dbt docs generate over RPC.",
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[
-        OutputDefinition(
-            name="request_token",
-            dagster_type=String,
-            description="The request token of the invoked dbt run.",
+    ins={"start_after": In(dagster_type=Nothing)},
+    out={
+        "request_token": Out(
+            dagster_type=String, description="The request token of the invoked dbt run."
         )
-    ],
+    },
     config_schema={
         "models": Field(
             config=Noneable(Array(String)),
@@ -1076,10 +1063,10 @@ def dbt_rpc_docs_generate(context: SolidExecutionContext) -> String:
     return out.result.get("request_token")
 
 
-@solid(
+@op(
     description="A solid to invoke dbt docs generate over RPC.",
-    input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
-    output_defs=[OutputDefinition(name="result", dagster_type=DbtRpcOutput)],
+    ins={"start_after": In(dagster_type=Nothing)},
+    out=Out(dagster_type=DbtRpcOutput),
     config_schema={
         "models": Field(
             config=Noneable(Array(String)),

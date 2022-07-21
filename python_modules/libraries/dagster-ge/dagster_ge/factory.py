@@ -17,7 +17,6 @@ from dagster import (
 )
 from dagster import _check as check
 from dagster import op, resource
-from dagster._legacy import solid
 
 try:
     # ge < v0.13.0
@@ -141,7 +140,7 @@ def ge_validation_solid_factory(
     """
 
     return core_ge_validation_factory(
-        solid,
+        op,
         "solid",
         name,
         datasource_name,
@@ -181,7 +180,7 @@ def ge_validation_op_factory(
     """
 
     return core_ge_validation_factory(
-        solid,
+        op,
         "solid",
         name,
         datasource_name,
@@ -311,7 +310,7 @@ def ge_validation_solid_factory_v3(
 
     """
     return core_ge_validation_factory_v3(
-        solid,
+        op,
         "solid",
         name,
         datasource_name,

@@ -24,8 +24,7 @@ from dagster import (
     SolidDefinition,
 )
 from dagster import _check as check
-from dagster import repository
-from dagster._legacy import solid
+from dagster import op, repository
 from dagster.core.definitions.utils import VALID_NAME_REGEX, validate_tags
 from dagster.core.instance import AIRFLOW_EXECUTION_DATE_STR, IS_AIRFLOW_INGEST_PIPELINE_STR
 
@@ -399,7 +398,7 @@ def make_dagster_solid_from_airflow_task(task, use_airflow_template_context, uni
     check.bool_param(use_airflow_template_context, "use_airflow_template_context")
     unique_id = check.opt_int_param(unique_id, "unique_id")
 
-    @solid(
+    @op(
         name=normalized_name(task.task_id, unique_id),
         input_defs=[InputDefinition("airflow_task_ready", Nothing)],
         output_defs=[OutputDefinition(Nothing, "airflow_task_complete")],

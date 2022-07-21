@@ -8,9 +8,9 @@ from dagster import (
     OutputDefinition,
     Permissive,
     StringSource,
+    op,
 )
 from dagster._annotations import experimental
-from dagster._legacy import solid
 from dagster.config.field import Field
 
 from ..utils import generate_materializations
@@ -34,7 +34,7 @@ def passthrough_flags_only(solid_config, additional_flags):
     }
 
 
-@solid(
+@op(
     description="A solid to invoke dbt run via CLI.",
     input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
     output_defs=[OutputDefinition(name="dbt_cli_output", dagster_type=DbtCliOutput)],
@@ -125,7 +125,7 @@ def dbt_cli_run(context):
     yield Output(cli_output, "dbt_cli_output")
 
 
-@solid(
+@op(
     description="A solid to invoke dbt test via CLI.",
     input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
     output_defs=[OutputDefinition(name="dbt_cli_output", dagster_type=DbtCliOutput)],
@@ -202,7 +202,7 @@ def dbt_cli_test(context):
     yield Output(cli_output, "dbt_cli_output")
 
 
-@solid(
+@op(
     description="A solid to invoke dbt snapshot via CLI.",
     input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
     output_defs=[OutputDefinition(name="dbt_cli_output", dagster_type=DbtCliOutput)],
@@ -248,7 +248,7 @@ def dbt_cli_snapshot(context):
     yield Output(cli_output, "dbt_cli_output")
 
 
-@solid(
+@op(
     description="A solid to invoke dbt run-operation via CLI.",
     input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
     output_defs=[OutputDefinition(name="dbt_cli_output", dagster_type=DbtCliOutput)],
@@ -289,7 +289,7 @@ def dbt_cli_run_operation(context):
     yield Output(cli_output, "dbt_cli_output")
 
 
-@solid(
+@op(
     description="A solid to invoke dbt source snapshot-freshness via CLI.",
     input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
     output_defs=[OutputDefinition(name="dbt_cli_output", dagster_type=DbtCliOutput)],
@@ -337,7 +337,7 @@ def dbt_cli_snapshot_freshness(context):
     yield Output(cli_output, "dbt_cli_output")
 
 
-@solid(
+@op(
     description="A solid to invoke dbt compile via CLI.",
     input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
     output_defs=[OutputDefinition(name="dbt_cli_output", dagster_type=DbtCliOutput)],
@@ -433,7 +433,7 @@ def dbt_cli_compile(context):
     yield Output(cli_output, "dbt_cli_output")
 
 
-@solid(
+@op(
     description="A solid to invoke dbt docs generate via CLI.",
     input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
     output_defs=[OutputDefinition(name="dbt_cli_output", dagster_type=DbtCliOutput)],
@@ -513,7 +513,7 @@ def dbt_cli_docs_generate(context):
     yield Output(cli_output, "dbt_cli_output")
 
 
-@solid(
+@op(
     description="A solid to invoke dbt seed via CLI.",
     input_defs=[InputDefinition(name="start_after", dagster_type=Nothing)],
     output_defs=[OutputDefinition(name="dbt_cli_output", dagster_type=DbtCliOutput)],
