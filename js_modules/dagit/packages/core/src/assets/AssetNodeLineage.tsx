@@ -67,17 +67,6 @@ export const AssetNodeLineage: React.FC<{
           onChange={(depth) => setParams({...params, lineageDepth: depth})}
           max={maxDepth}
         />
-        <Checkbox
-          format="switch"
-          label="Include secondary edges"
-          checked={!!params.lineageShowSecondaryEdges}
-          onChange={() =>
-            setParams({
-              ...params,
-              lineageShowSecondaryEdges: params.lineageShowSecondaryEdges ? undefined : true,
-            })
-          }
-        />
         <div style={{flex: 1}} />
         {Object.values(assetGraphData.nodes).length > 1 ? (
           <LaunchAssetExecutionButton
