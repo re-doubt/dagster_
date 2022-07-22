@@ -18,6 +18,7 @@ PERMISSIONS_QUERY = """
       permissions {
         permission
         value
+        disabledReason
       }
     }
 """
@@ -139,3 +140,9 @@ class TestPermissionsQuery(NonLaunchableGraphQLContextTestMatrix):
             assert permissions_map == VIEWER_PERMISSIONS
         else:
             assert permissions_map == EDITOR_PERMISSIONS
+
+        for permission in result.data["permissions"]:
+            if not permission["value"]:
+                assert permission["disabledReason"] == "Disabled by your administrator"
+            else:
+                assert not permission.get("disabledReason")
