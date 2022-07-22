@@ -115,12 +115,12 @@ class JobDefinition(PipelineDefinition):
         # it directly. Once JobDefinition no longer subclasses
         # PipelineDefinition, we can change the default executor to be set
         # elsewhere to avoid the need for this check.
-        _executor_def_specified = (
+        self._executor_def_specified = (
             _executor_def_specified
             if _executor_def_specified is not None
             else executor_def is not None
         )
-        _logger_defs_specified = (
+        self._logger_defs_specified = (
             _logger_defs_specified
             if _logger_defs_specified is not None
             else logger_defs is not None
@@ -205,15 +205,13 @@ class JobDefinition(PipelineDefinition):
 
         # Exists for backcompat - JobDefinition is implemented as a single-mode pipeline.
         mode_def = ModeDefinition(
-            resource_defs=resource_defs,
+            resource_defs=resource_defs_with_defaults,
             logger_defs=logger_defs,
             executor_defs=[executor_def] if executor_def else None,
             _config_mapping=config_mapping,
             _partitioned_config=partitioned_config,
         )
 
-        self._executor_def_specified = _executor_def_specified
-        self._logger_defs_specified = _logger_defs_specified
         self._cached_partition_set: Optional["PartitionSetDefinition"] = None
         self._subset_selection_data = _subset_selection_data
         self.input_values = input_values
