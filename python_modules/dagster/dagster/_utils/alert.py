@@ -3,7 +3,7 @@ import smtplib
 import ssl
 from typing import TYPE_CHECKING, Callable, List, Optional, Union
 
-from dagster._core.definitions.sensor_definition import DefaultSensorStatus
+from dagster._core.definitions.sensor_definition import DefaultSensorStatus, SensorDefinition
 from dagster._core.errors import DagsterInvalidDefinitionError
 
 if TYPE_CHECKING:
@@ -199,7 +199,7 @@ def make_email_on_run_failure_sensor(
         List[Union["PipelineDefinition", "GraphDefinition", "UnresolvedAssetJobDefinition"]]
     ] = None,
     default_status: DefaultSensorStatus = DefaultSensorStatus.STOPPED,
-):
+) -> SensorDefinition:
     """Create a job failure sensor that sends email via the SMTP protocol.
 
     Args:

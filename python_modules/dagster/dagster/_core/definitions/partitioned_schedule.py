@@ -1,5 +1,5 @@
 from datetime import time
-from typing import Optional, Union, cast
+from typing import Callable, Optional, Union, cast
 
 import dagster._check as check
 
@@ -101,7 +101,22 @@ def build_schedule_from_partitioned_job(
     return schedule_def
 
 
-schedule_from_partitions = build_schedule_from_partitioned_job
+# Unfortunately there doesn't seem to be any way around this to get pyright to consider this typed--
+# not sure why it complains about inferring the type from `build_schedule_from_partitioned_job`, and
+# it does not respect type: ignore.
+schedule_from_partitions: Callable[
+    [
+        Union[JobDefinition, UnresolvedAssetJobDefinition],
+        Optional[str],
+        Optional[str],
+        Optional[int],
+        Optional[int],
+        Optional[int],
+        Optional[int],
+        DefaultScheduleStatus,
+    ],
+    ScheduleDefinition,
+] = build_schedule_from_partitioned_job
 
 
 def latest_window_partition_selector(

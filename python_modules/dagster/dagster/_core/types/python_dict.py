@@ -106,4 +106,4 @@ class DagsterDictApi:
         return create_typed_runtime_dict(args[0][0], args[0][1])
 
 
-Dict = DagsterDictApi()
+Dict: DagsterDictApi = DagsterDictApi()

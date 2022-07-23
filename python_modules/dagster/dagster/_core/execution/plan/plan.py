@@ -102,7 +102,7 @@ class _PlanBuilder:
         self,
         pipeline: IPipeline,
         resolved_run_config: ResolvedRunConfig,
-        step_keys_to_execute: Optional[List[str]],
+        step_keys_to_execute: Optional[Sequence[str]],
         known_state: KnownExecutionState,
         instance_ref: Optional[InstanceRef],
         tags: Dict[str, str],
@@ -260,7 +260,7 @@ class _PlanBuilder:
         dependency_structure: DependencyStructure,
         parent_handle: Optional[NodeHandle] = None,
         parent_step_inputs: Optional[
-            List[Union[StepInput, UnresolvedMappedStepInput, UnresolvedCollectStepInput]]
+            Sequence[Union[StepInput, UnresolvedMappedStepInput, UnresolvedCollectStepInput]]
         ] = None,
     ) -> None:
         asset_layer = self.pipeline.get_definition().asset_layer
@@ -452,7 +452,7 @@ def get_step_input_source(
     dependency_structure: DependencyStructure,
     handle: NodeHandle,
     parent_step_inputs: Optional[
-        List[Union[StepInput, UnresolvedMappedStepInput, UnresolvedCollectStepInput]]
+        Sequence[Union[StepInput, UnresolvedMappedStepInput, UnresolvedCollectStepInput]]
     ],
 ):
     check.inst_param(plan_builder, "plan_builder", _PlanBuilder)
@@ -605,8 +605,8 @@ class ExecutionPlan(
         [
             ("step_dict", Dict[StepHandleUnion, IExecutionStep]),
             ("executable_map", Dict[str, Union[StepHandle, ResolvedFromDynamicStepHandle]]),
-            ("resolvable_map", Dict[FrozenSet[str], List[UnresolvedStepHandle]]),
-            ("step_handles_to_execute", List[StepHandleUnion]),
+            ("resolvable_map", Dict[FrozenSet[str], Sequence[UnresolvedStepHandle]]),
+            ("step_handles_to_execute", Sequence[StepHandleUnion]),
             ("known_state", KnownExecutionState),
             ("artifacts_persisted", bool),
             ("step_dict_by_key", Dict[str, IExecutionStep]),
@@ -618,8 +618,8 @@ class ExecutionPlan(
         cls,
         step_dict: Dict[StepHandleUnion, IExecutionStep],
         executable_map: Dict[str, Union[StepHandle, ResolvedFromDynamicStepHandle]],
-        resolvable_map: Dict[FrozenSet[str], List[UnresolvedStepHandle]],
-        step_handles_to_execute: List[StepHandleUnion],
+        resolvable_map: Dict[FrozenSet[str], Sequence[UnresolvedStepHandle]],
+        step_handles_to_execute: Sequence[StepHandleUnion],
         known_state: KnownExecutionState,
         artifacts_persisted: bool = False,
         step_dict_by_key: Optional[Dict[str, IExecutionStep]] = None,
@@ -662,7 +662,7 @@ class ExecutionPlan(
         )
 
     @property
-    def steps(self) -> List[IExecutionStep]:
+    def steps(self) -> Sequence[IExecutionStep]:
         return list(self.step_dict.values())
 
     @property
@@ -672,7 +672,7 @@ class ExecutionPlan(
         )
 
     @property
-    def step_keys_to_execute(self) -> List[str]:
+    def step_keys_to_execute(self) -> Sequence[str]:
         return [handle.to_key() for handle in self.step_handles_to_execute]
 
     def get_step_output(self, step_output_handle: StepOutputHandle) -> StepOutput:
@@ -704,10 +704,10 @@ class ExecutionPlan(
         step = self.get_step_by_key(key)
         return cast(ExecutionStep, check.inst(step, ExecutionStep))
 
-    def get_all_steps_in_topo_order(self) -> List[IExecutionStep]:
+    def get_all_steps_in_topo_order(self) -> Sequence[IExecutionStep]:
         return [step for step_level in self.get_all_steps_by_level() for step in step_level]
 
-    def get_all_steps_by_level(self) -> List[List[IExecutionStep]]:
+    def get_all_steps_by_level(self) -> Sequence[Sequence[IExecutionStep]]:
         return [
             [self.get_step_by_key(step_key) for step_key in sorted(step_key_level)]
             for step_key_level in toposort(self.get_all_step_deps())
@@ -725,10 +725,10 @@ class ExecutionPlan(
 
         return deps
 
-    def get_steps_to_execute_in_topo_order(self) -> List[ExecutionStep]:
+    def get_steps_to_execute_in_topo_order(self) -> Sequence[ExecutionStep]:
         return [step for step_level in self.get_steps_to_execute_by_level() for step in step_level]
 
-    def get_steps_to_execute_by_level(self) -> List[List[ExecutionStep]]:
+    def get_steps_to_execute_by_level(self) -> Sequence[Sequence[ExecutionStep]]:
         return _get_steps_to_execute_by_level(
             self.step_dict, self.step_dict_by_key, self.step_handles_to_execute, self.executable_map
         )
@@ -740,7 +740,7 @@ class ExecutionPlan(
 
     def resolve(
         self,
-        mappings: Dict[str, Dict[str, List[str]]],
+        mappings: Dict[str, Dict[str, Sequence[str]]],
     ) -> Dict[str, Set[str]]:
         """Resolve any dynamic map or collect steps with the resolved dynamic mappings"""
 
@@ -761,7 +761,7 @@ class ExecutionPlan(
 
     def build_subset_plan(
         self,
-        step_keys_to_execute: List[str],
+        step_keys_to_execute: Sequence[str],
         pipeline_def: PipelineDefinition,
         resolved_run_config: ResolvedRunConfig,
         step_output_versions=None,
@@ -774,7 +774,7 @@ class ExecutionPlan(
         step_handles_to_validate_set: Set[StepHandleUnion] = {
             StepHandle.parse_from_key(key) for key in step_keys_to_execute
         }
-        step_handles_to_execute: List[StepHandleUnion] = []
+        step_handles_to_execute: Sequence[StepHandleUnion] = []
         bad_keys = []
 
         for handle in step_handles_to_validate_set:
@@ -856,7 +856,7 @@ class ExecutionPlan(
         pipeline_def: PipelineDefinition,
         resolved_run_config: ResolvedRunConfig,
         instance: DagsterInstance,
-        selected_step_keys: Optional[List[str]],
+        selected_step_keys: Optional[Sequence[str]],
     ) -> "ExecutionPlan":
         """
         Returns:
@@ -985,10 +985,10 @@ class ExecutionPlan(
     def build(
         pipeline: IPipeline,
         resolved_run_config: ResolvedRunConfig,
-        step_keys_to_execute: Optional[List[str]] = None,
+        step_keys_to_execute: Optional[Sequence[str]] = None,
         known_state: Optional[KnownExecutionState] = None,
         instance_ref: Optional[InstanceRef] = None,
-        tags: Optional[Dict[str, str]] = None,
+        tags: Optional[Mapping[str, str]] = None,
     ) -> "ExecutionPlan":
         """Here we build a new ExecutionPlan from a pipeline definition and the resolved run config.
 

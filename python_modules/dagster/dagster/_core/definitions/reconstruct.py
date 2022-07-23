@@ -2,7 +2,7 @@ import inspect
 import os
 import sys
 from functools import lru_cache
-from typing import TYPE_CHECKING, Any, Dict, FrozenSet, List, NamedTuple, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Callable, Dict, FrozenSet, List, Mapping, NamedTuple, Optional, Tuple, Union, overload
 
 import dagster._check as check
 import dagster._seven as seven
@@ -332,7 +332,7 @@ class ReconstructablePipeline(
         return None
 
 
-def reconstructable(target):
+def reconstructable(target: Callable[..., PipelineDefinition]) -> ReconstructablePipeline:
     """
     Create a :py:class:`~dagster._core.definitions.reconstructable.ReconstructablePipeline` from a
     function that returns a :py:class:`~dagster.PipelineDefinition`/:py:class:`~dagster.JobDefinition`,
@@ -451,12 +451,12 @@ def reconstructable(target):
 
 @experimental
 def build_reconstructable_job(
-    reconstructor_module_name,
-    reconstructor_function_name,
-    reconstructable_args=None,
-    reconstructable_kwargs=None,
-    reconstructor_working_directory=None,
-):
+    reconstructor_module_name: str,
+    reconstructor_function_name: str,
+    reconstructable_args: Optional[Tuple[object]]=None,
+    reconstructable_kwargs: Optional[Mapping[str, object]]=None,
+    reconstructor_working_directory: Optional[str]=None,
+) -> ReconstructablePipeline:
     """
     Create a :py:class:`dagster._core.definitions.reconstructable.ReconstructablePipeline`.
 
@@ -525,11 +525,11 @@ def build_reconstructable_job(
         reconstructor_working_directory, "reconstructor_working_directory", os.getcwd()
     )
 
-    reconstructable_args = list(check.opt_tuple_param(reconstructable_args, "reconstructable_args"))
-    reconstructable_kwargs = list(
+    _reconstructable_args = list(check.opt_tuple_param(reconstructable_args, "reconstructable_args"))
+    _reconstructable_kwargs = list(
         (
             [key, value]
-            for key, value in check.opt_dict_param(
+            for key, value in check.opt_mapping_param(
                 reconstructable_kwargs, "reconstructable_kwargs", key_type=str
             ).items()
         )
@@ -541,7 +541,7 @@ def build_reconstructable_job(
         working_directory=reconstructor_working_directory,
     )
 
-    pointer = CustomPointer(reconstructor_pointer, reconstructable_args, reconstructable_kwargs)
+    pointer = CustomPointer(reconstructor_pointer, _reconstructable_args, _reconstructable_kwargs)
 
     pipeline_def = pipeline_def_from_pointer(pointer)
 

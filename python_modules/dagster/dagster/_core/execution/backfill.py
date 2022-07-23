@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, List, NamedTuple, Optional
+from typing import Mapping, NamedTuple, Optional, Sequence
 
 import dagster._check as check
 from dagster._core.execution.plan.resume_retry import ReexecutionStrategy
@@ -50,10 +50,10 @@ class PartitionBackfill(
             ("backfill_id", str),
             ("partition_set_origin", ExternalPartitionSetOrigin),
             ("status", BulkActionStatus),
-            ("partition_names", List[str]),
+            ("partition_names", Sequence[str]),
             ("from_failure", bool),
-            ("reexecution_steps", List[str]),
-            ("tags", Dict[str, str]),
+            ("reexecution_steps", Sequence[str]),
+            ("tags", Mapping[str, str]),
             ("backfill_timestamp", float),
             ("last_submitted_partition_name", Optional[str]),
             ("error", Optional[SerializableErrorInfo]),
@@ -65,10 +65,10 @@ class PartitionBackfill(
         backfill_id: str,
         partition_set_origin: ExternalPartitionSetOrigin,
         status: BulkActionStatus,
-        partition_names: List[str],
+        partition_names: Sequence[str],
         from_failure: bool,
-        reexecution_steps: List[str],
-        tags: Dict[str, str],
+        reexecution_steps: Optional[Sequence[str]],
+        tags: Mapping[str, str],
         backfill_timestamp: float,
         last_submitted_partition_name: Optional[str] = None,
         error: Optional[SerializableErrorInfo] = None,

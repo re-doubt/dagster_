@@ -292,7 +292,7 @@ def execute_list_versions_command(instance: DagsterInstance, kwargs: Dict[str, A
     check.inst_param(instance, "instance", DagsterInstance)
 
     config = list(
-        check.opt_tuple_param(kwargs.get("config"), "config", default=tuple(), of_type=str)
+        check.opt_tuple_param(kwargs.get("config"), "config", of_type=str)
     )
     preset = kwargs.get("preset")
     mode = kwargs.get("mode")
@@ -383,7 +383,7 @@ def execute_execute_command(
 ):
     check.inst_param(instance, "instance", DagsterInstance)
 
-    config = list(check.opt_tuple_param(kwargs.get("config"), "config", default=(), of_type=str))
+    config = list(check.opt_tuple_param(kwargs.get("config"), "config", of_type=str))
     preset = cast(Optional[str], kwargs.get("preset"))
     mode = cast(Optional[str], kwargs.get("mode"))
 
@@ -415,9 +415,9 @@ def _check_execute_external_pipeline_args(
     preset: Optional[str],
     tags: Optional[Mapping[str, object]],
     solid_selection: Optional[List[str]],
-) -> Tuple[Dict[str, object], str, Mapping[str, object], Optional[List[str]]]:
+) -> Tuple[Mapping[str, object], str, Mapping[str, object], Optional[List[str]]]:
     check.inst_param(external_pipeline, "external_pipeline", ExternalPipeline)
-    run_config = check.opt_dict_param(run_config, "run_config")
+    run_config = check.opt_mapping_param(run_config, "run_config")
     check.opt_str_param(mode, "mode")
     check.opt_str_param(preset, "preset")
     check.invariant(
@@ -769,7 +769,7 @@ def get_config_from_args(kwargs: Dict[str, str]) -> Dict[str, object]:
 
     elif config:
         config_file_list = list(
-            check.opt_tuple_param(config, "config", default=tuple(), of_type=str)
+            check.opt_tuple_param(config, "config", of_type=str)
         )
         return get_run_config_from_file_list(config_file_list)
 
